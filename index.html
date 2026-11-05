@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Praktikum Web - Modul 2: React Lanjutan (IF UNPAS)</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #F8FAFC;
+      --accent-emerald: #00B87C;
+      --navy-unpas: #1B365D;
+      --charcoal: #0F172A;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--charcoal);
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .code-window-dark {
+      background-color: #0F172A !important;
+      color: #F8FAFC !important;
+    }
+    .pixel-bg {
+      background-image: 
+        radial-gradient(rgba(16, 185, 129, 0.15) 1.5px, transparent 1.5px),
+        radial-gradient(rgba(15, 23, 42, 0.05) 1.5px, transparent 1.5px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); opacity: 0.35; }
+      50% { transform: translateY(-10px); opacity: 0.65; }
+    }
+    .floating-pixel {
+      animation: floatSlow 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes slideEnterRight {
+      0% { opacity: 0; transform: translateX(28px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideEnterLeft {
+      0% { opacity: 0; transform: translateX(-28px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    .slide-anim-right {
+      animation: slideEnterRight 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .slide-anim-left {
+      animation: slideEnterLeft 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Compact Simulated Modul 2 CSS inside 16:9 Live Preview */
+    .modul2-wadah {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 12px;
+      font-family: Arial, sans-serif;
+      color: #1F2937;
+    }
+    .modul2-judul { color: #1B365D; margin-bottom: 2px; font-weight: 700; font-size: 18px; }
+    .modul2-subjudul { color: #6B7280; margin-top: 0; margin-bottom: 10px; font-size: 12px; }
+    .modul2-kartu {
+      background: #FFFFFF;
+      border: 1px solid #D0D7DE;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+      color: #1F2937;
+    }
+    .modul2-kartu h2 { margin-top: 0; margin-bottom: 8px; font-size: 15px; font-weight: 700; color: #1B365D; }
+    .modul2-baris { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .modul2-input {
+      flex: 1;
+      min-width: 130px;
+      padding: 7px 10px;
+      border: 1px solid #D0D7DE;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #111827;
+      background: #FFFFFF;
+      outline: none;
+    }
+    .modul2-input:focus { border-color: #1B365D; box-shadow: 0 0 0 2px rgba(27,54,93,0.15); }
+    .modul2-tombol {
+      padding: 7px 13px;
+      border: none;
+      border-radius: 6px;
+      background: #1B365D;
+      color: #FFFFFF;
+      font-weight: bold;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .modul2-tombol:active:not(:disabled) { transform: scale(0.98); }
+    .modul2-tombol:disabled { background: #9CA3AF; color: #FFFFFF; cursor: not-allowed; }
+    .modul2-tombol-merah { background: #DC2626; color: #FFFFFF; }
+    .modul2-tombol-kecil { padding: 4px 10px; font-size: 12px; }
+    .modul2-daftar { list-style: none; padding: 0; margin: 0; }
+    .modul2-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #E5E7EB;
+      font-size: 13px;
+      color: #1F2937;
+    }
+    .modul2-item span { flex: 1; }
+    .modul2-selesai { text-decoration: line-through; color: #9CA3AF; }
+    .modul2-kosong { color: #6B7280; text-align: center; font-style: italic; font-size: 13px; padding: 6px 0; }
+    .modul2-galat { color: #DC2626; font-size: 12px; margin: 6px 0 0; font-weight: 600; }
+    .modul2-ringkasan { font-size: 12px; color: #374151; margin-bottom: 6px; font-weight: 600; }
+  </style>
+</head>
+<body class="pixel-bg h-screen w-screen overflow-hidden flex items-center justify-center relative select-none md:select-auto">
+
+  <!-- Top Thin Progress Bar -->
+  <div class="fixed top-0 left-0 right-0 h-1.5 bg-slate-200/80 z-30">
+    <div id="topProgressBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 4.54%;"></div>
+  </div>
+
+  <!-- Subtle Floating Background Pixels -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="floating-pixel absolute top-10 left-14 w-3 h-3 bg-emerald-500/20 rounded-xs"></div>
+    <div class="floating-pixel absolute top-1/3 right-16 w-3.5 h-3.5 bg-emerald-500/15 rounded-xs" style="animation-delay: 1.5s"></div>
+    <div class="floating-pixel absolute bottom-12 left-1/4 w-2.5 h-2.5 bg-slate-700/10 rounded-xs" style="animation-delay: 2.7s"></div>
+  </div>
+
+  <!-- Subtle Slide Number Watermark (Bottom Right Corner Only) -->
+  <div id="slideCornerIndicator" class="fixed bottom-3 right-5 z-20 px-3 py-1 rounded-full bg-slate-900/85 text-emerald-400 font-mono-code text-xs font-bold tracking-wider pointer-events-none shadow-sm border border-slate-700">
+    01 / 22
+  </div>
+
+  <!-- 16:9 ZERO-SCROLL SLIDE STAGE -->
+  <main class="relative z-10 w-full max-w-[1320px] h-full max-h-[742px] mx-auto px-6 sm:px-10 py-4 flex flex-col justify-center overflow-hidden">
+    <div id="slideViewport" class="w-full flex flex-col justify-center overflow-hidden">
+      <!-- Dynamic Slide Injected Here -->
+    </div>
+  </main>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="appToast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 text-white px-4 py-2 rounded-xl shadow-xl border border-emerald-500/40 text-xs font-semibold items-center gap-2">
+    <span class="text-emerald-400 font-bold">✓</span>
+    <span id="appToastText">Kode berhasil disalin!</span>
+  </div>
+
+  <script>
+    const AppState = {
+      currentSlide: 0,
+      direction: 'right',
+
+      // Slide 1 Interactive Hero Playground
+      s1Mode: 'modul2',
+      s1Clicks: 0,
+      s1Likes: 12,
+      s1StudentName: 'Mahasiswa Baru UNPAS',
+      s1StaticNotice: '',
+
+      // Slide 2 Props vs State
+      s3Status: 'Klik salah satu tombol di atas untuk melihat bedanya!',
+      s3StateCount: 25000,
+
+      // Slide 3 let vs useState
+      s4LetMem: 0,
+      s4StateVal: 0,
+
+      // Slide 4 5-Step Lifecycle
+      s5Step: 1,
+      s5Count: 0,
+
+      // Slide 5 Event Handling
+      s6Text: '',
+      s6SubmittedMsg: 'Ketik sesuatu di atas lalu klik Kirim Form.',
+      s6PreventDefaultOn: true,
+
+      // Slide 6 Immutable Update
+      s7Tab: 0,
+      s7Items: [
+        { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+        { id: 2, judul: 'Pelajari useState', selesai: false }
+      ],
+      s7Log: 'Klik tombol operasi di atas untuk menguji perubahan data!',
+
+      // Slide 7 Controlled Form
+      s8Input: 'Kerjakan laporan Modul 2',
+
+      // Slide 8 Conditional Rendering
+      s9IsError: false,
+      s9Selesai: false,
+
+      // Slide 9 Lifting State Up
+      s10TasksCount: 2,
+      s10LastSignal: 'Induk (App) menitipkan data & fungsi ke Anak lewat props.',
+
+      // Slide 10 useEffect Dependency
+      s11DepMode: 'state',
+      s11Renders: 1,
+      s11EffectRuns: 1,
+
+      // Slide 11 File Explorer
+      s12SelectedFile: 0,
+
+      // Slide 12 CSS Preview
+      s12CssDemoSelesai: false,
+
+      // Slide 13 Kartu.jsx Live
+      s13Judul: 'Pengumuman Praktikum',
+      s13Isi: '<p>Isi di antara tag <b>&lt;Kartu&gt;</b> otomatis masuk ke <b>children</b>!</p>',
+
+      // Slide 14 Langkah 3a Keliru
+      s14InternalLet: 0,
+      s14ConsoleLogs: [],
+
+      // Slide 15 Langkah 3b Benar
+      s15Count: 0,
+      s15TargetKlik: 5,
+      s15Pesan: 'Wah, kamu rajin sekali mengklik!',
+
+      // Slide 16 Langkah 4 FormTugas
+      s16Teks: '',
+      s16ParentLogs: ['"Install Node.js dan Vite"'],
+
+      // Slide 17 Langkah 5 ItemTugas
+      s17Items: [
+        { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+        { id: 2, judul: 'Pelajari useState', selesai: false }
+      ],
+      s17BugSimulated: false,
+
+      // Slide 18 & 19 Full App
+      s18Tasks: [
+        { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+        { id: 2, judul: 'Pelajari useState', selesai: false }
+      ],
+      s18Input: '',
+
+      // Slide 20 FAQ
+      s20SelectedFAQ: 0,
+
+      // Slide 21 Tugas 1 & 2
+      s21Filter: 'semua',
+      s21Tasks: [
+        { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+        { id: 2, judul: 'Pelajari useState', selesai: false },
+        { id: 3, judul: 'Buat Fitur Filter 3 Tombol', selesai: true }
+      ],
+
+      // Slide 22 Tugas 3 Keuangan
+      s22Transaksi: [
+        { id: 1, ket: 'Uang Saku Mingguan', nominal: 150000, jenis: 'pemasukan' },
+        { id: 2, ket: 'Makan Siang Kampus', nominal: 25000, jenis: 'pengeluaran' }
+      ],
+      s22UseNumberConvert: true
+    };
+
+    const SLIDES_META = [
+      { no: '01', cat: 'MODUL 2 • PRAKTIKUM WEB', title: 'React Lanjutan: Membuat Komponen Menjadi Hidup' },
+      { no: '02', cat: 'TEORI DASAR 1', title: 'Props vs State: Uang Titipan vs Buku Harian Sendiri' },
+      { no: '03', cat: 'TEORI DASAR 2', title: 'Kenapa Variabel Biasa (let) Tidak Bisa Mengubah Layar?' },
+      { no: '04', cat: 'TEORI DASAR 3', title: 'Mengenal Hook useState & 5 Tahap Saat Tombol Diklik' },
+      { no: '05', cat: 'TEORI DASAR 4', title: 'Event Handling: Merespons Klik & Ketikan Pengguna' },
+      { no: '06', cat: 'TEORI DASAR 5', title: 'Aturan Emas State: Jangan Coret Foto Lama (Immutable)' },
+      { no: '07', cat: 'TEORI DASAR 6', title: 'Formulir Terkendali: Layar Kasir & Mesin Hitung' },
+      { no: '08', cat: 'TEORI DASAR 7', title: 'Conditional Rendering: Tampil Sesuai Kondisi' },
+      { no: '09', cat: 'TEORI DASAR 8', title: 'Komunikasi Komponen: Data Turun, Laporan Naik' },
+      { no: '10', cat: 'TEORI DASAR 9', title: 'useEffect: Petugas Kebersihan Setelah Layar Digambar' },
+      { no: '11', cat: 'LANGKAH LAB 1A', title: 'Peta 6 Berkas Aplikasi & Cara Buat Proyek Vite' },
+      { no: '12', cat: 'LANGKAH LAB 1B', title: 'Menyiapkan Gaya Tampilan di Berkas src/App.css' },
+      { no: '13', cat: 'LANGKAH LAB 2', title: 'Membuat Bingkai Kartu dengan Props children (Kartu.jsx)' },
+      { no: '14', cat: 'LANGKAH LAB 3A', title: 'Eksperimen Penghitung — Versi Keliru (Pakai let)' },
+      { no: '15', cat: 'LANGKAH LAB 3B', title: 'Eksperimen Penghitung — Versi Benar (Pakai useState)' },
+      { no: '16', cat: 'LANGKAH LAB 4', title: 'Membuat Formulir Terkendali (src/FormTugas.jsx)' },
+      { no: '17', cat: 'LANGKAH LAB 5', title: 'Membuat Baris Tugas (src/ItemTugas.jsx)' },
+      { no: '18', cat: 'LANGKAH LAB 6', title: 'Merangkai Semuanya di Induk (src/App.jsx) & 5 Skenario Uji' },
+      { no: '19', cat: 'LANGKAH LAB 7', title: 'Menyimpan Data ke localStorage & Judul Tab (useEffect)' },
+      { no: '20', cat: 'LANGKAH LAB 8', title: 'Kamus Solusi 10 Error Paling Sering Muncul di Lab' },
+      { no: '21', cat: 'LATIHAN MANDIRI • TUGAS 1 & 2', title: 'Latihan di Kelas: Fitur Filter 3 Tombol & Hapus Selesai' },
+      { no: '22', cat: 'TUGAS TERSTRUKTUR • TUGAS 3', title: 'Aplikasi "Catatan Keuangan Mini" & Petunjuk Number()' }
+    ];
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('appToast');
+      const text = document.getElementById('appToastText');
+      if (!toast || !text) return;
+      text.textContent = msg;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 2200);
+    }
+
+    function copyTextToClipboard(text) {
+      const fallback = () => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        showToast('Kode berhasil disalin!');
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast('Kode berhasil disalin!')).catch(fallback);
+      } else {
+        fallback();
+      }
+    }
+
+    function highlightSyntax(rawLine) {
+      const trimmed = rawLine.trim();
+      if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('{/*') || trimmed.startsWith('#')) {
+        return `<span class="text-slate-400 italic">${escapeHtml(rawLine)}</span>`;
+      }
+      const tokenRegex = /(\/\/.*$|\/\*[\s\S]*?\*\/)|('[^']*'|\"[^\"]*\"|`[^`]*`)|\b(import|from|function|return|const|let|if|else|export|default|true|false|new)\b|\b(useState|useEffect|onClick|onChange|onSubmit|value|checked|disabled|className|key|children|judul|tugas|daftarTugas|setDaftarTugas|jumlah|setJumlah|teks|setTeks|JSON|localStorage|document|Date|Number|console)\b|\b(\d+)\b/g;
+
+      let result = '';
+      let lastIndex = 0;
+      let match;
+      while ((match = tokenRegex.exec(rawLine)) !== null) {
+        if (match.index > lastIndex) {
+          result += `<span class="text-slate-100">${escapeHtml(rawLine.slice(lastIndex, match.index))}</span>`;
+        }
+        const [full, comment, str, kw, hookProp, num] = match;
+        if (comment) {
+          result += `<span class="text-slate-400 italic">${escapeHtml(full)}</span>`;
+        } else if (str) {
+          result += `<span class="text-amber-300 font-medium">${escapeHtml(full)}</span>`;
+        } else if (kw) {
+          result += `<span class="text-pink-400 font-bold">${escapeHtml(full)}</span>`;
+        } else if (hookProp) {
+          result += `<span class="text-emerald-300 font-semibold">${escapeHtml(full)}</span>`;
+        } else if (num) {
+          result += `<span class="text-sky-300 font-bold">${escapeHtml(full)}</span>`;
+        } else {
+          result += `<span class="text-slate-100">${escapeHtml(full)}</span>`;
+        }
+        lastIndex = tokenRegex.lastIndex;
+      }
+      if (lastIndex < rawLine.length) {
+        result += `<span class="text-slate-100">${escapeHtml(rawLine.slice(lastIndex))}</span>`;
+      }
+      return result;
+    }
+
+    function renderCodeWindow({ filename, code, copyId }) {
+      const lines = code.trim().split('\n');
+      const numberedRows = lines.map((line, idx) => `
+        <div class="flex leading-snug hover:bg-slate-800/70 px-1.5 py-0.5 rounded">
+          <span class="w-6 shrink-0 select-none text-slate-500 text-right pr-2.5 text-[11px] font-mono-code">${idx + 1}</span>
+          <span class="flex-1 whitespace-pre overflow-x-auto text-slate-100 font-mono-code text-xs sm:text-[13px]">${highlightSyntax(line)}</span>
+        </div>
+      `).join('');
+
+      window.__copySnippets = window.__copySnippets || {};
+      window.__copySnippets[copyId] = code.trim();
+
+      return `
+        <div class="code-window-dark rounded-2xl overflow-hidden border border-slate-700 bg-[#0F172A] shadow-lg flex flex-col">
+          <div class="px-3.5 py-2 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+              <span class="ml-1.5 font-mono-code text-xs font-bold text-slate-100">${escapeHtml(filename)}</span>
+            </div>
+            <button type="button" data-copy-id="${copyId}" class="btn-copy-code px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-300 text-[11px] font-mono-code font-bold transition border border-slate-600">
+              📋 Copy Kode
+            </button>
+          </div>
+          <div class="p-3 font-mono-code bg-[#0F172A] text-slate-100 overflow-x-auto">
+            ${numberedRows}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSlideHeader(meta, subtitle = '') {
+      return `
+        <div class="mb-3.5">
+          <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 text-[11px] font-mono-code font-bold mb-1.5">
+            <span>SLIDE ${meta.no} / ${SLIDES_META.length}</span>
+            <span>•</span>
+            <span>${meta.cat}</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">${meta.title}</h1>
+          ${subtitle ? `<p class="text-sm text-slate-600 mt-1 font-medium">${subtitle}</p>` : ''}
+        </div>
+      `;
+    }
+
+    function buildSlideHTML(index) {
+      const meta = SLIDES_META[index];
+      switch (index) {
+        // =====================================================================
+        // SLIDE 01: COVER 16:9 YANG BERSIH, ELEGAN & INTERAKTIF
+        // =====================================================================
+        case 0: {
+          const isModul2 = AppState.s1Mode === 'modul2';
+          return `
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 items-center">
+              <!-- Left Column: Hero Title & 6 Visual Topic Cards -->
+              <div class="lg:col-span-7 space-y-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-900 text-xs font-mono-code font-bold">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                  <span>UNIVERSITAS PASUNDAN • PRAKTIKUM WEB</span>
+                </div>
+
+                <div>
+                  <div class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 mb-1">PERTEMUAN 2 — INTERAKTIVITAS KOMPONEN</div>
+                  <h1 class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-[1.08]">
+                    Modul 2 — <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">React Lanjutan</span>
+                  </h1>
+                </div>
+
+                <p class="text-base text-slate-600 leading-relaxed font-medium">
+                  Mengubah halaman web yang tadinya <strong>kaku seperti brosur cetak (Modul 1)</strong> menjadi <strong>aplikasi hidup</strong> yang bisa merespons klik, membaca ketikan, dan mengingat data!
+                </p>
+
+                <!-- 6 Core Pillars Grid (Clean 2x3 Cards) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
+                  <div class="p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+                    <div class="text-base">⚡ <strong class="text-xs font-extrabold text-slate-900">1. Event Handling</strong></div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Merespons klik &amp; ketikan</div>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+                    <div class="text-base">🧠 <strong class="text-xs font-extrabold text-slate-900">2. State (useState)</strong></div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Ingatan milik komponen</div>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+                    <div class="text-base">📸 <strong class="text-xs font-extrabold text-slate-900">3. Immutable</strong></div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Update array dengan aman</div>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+                    <div class="text-base">🧾 <strong class="text-xs font-extrabold text-slate-900">4. Controlled Form</strong></div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Sinkronisasi &amp; validasi input</div>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+                    <div class="text-base">📞 <strong class="text-xs font-extrabold text-slate-900">5. Komunikasi</strong></div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Lifting state up &amp; children</div>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+                    <div class="text-base">💾 <strong class="text-xs font-extrabold text-slate-900">6. useEffect</strong></div>
+                    <div class="text-[11px] text-slate-500 mt-0.5">Judul tab &amp; localStorage</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Interactive Comparison Simulator -->
+              <div class="lg:col-span-5">
+                <div class="rounded-3xl bg-white border-2 ${isModul2 ? 'border-emerald-500 shadow-xl' : 'border-slate-300 shadow-md'} p-5 space-y-3.5 transition-all">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono-code font-bold uppercase ${isModul2 ? 'text-emerald-700' : 'text-slate-500'}">
+                      🎮 COBA SENDIRI BEDANYA:
+                    </span>
+                    <div class="flex rounded-xl bg-slate-100 p-1 border border-slate-200">
+                      <button type="button" data-s1-mode="modul1" class="btn-s1-mode px-2.5 py-1 rounded-lg text-xs font-bold transition ${!isModul2 ? 'bg-slate-800 text-white shadow-xs' : 'text-slate-600'}">
+                        📦 Modul 1 (Statis)
+                      </button>
+                      <button type="button" data-s1-mode="modul2" class="btn-s1-mode px-2.5 py-1 rounded-lg text-xs font-bold transition ${isModul2 ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600'}">
+                        ⚡ Modul 2 (Hidup!)
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Simulated Student Card -->
+                  <div class="p-4 rounded-2xl ${isModul2 ? 'bg-gradient-to-br from-slate-900 to-slate-800 text-white' : 'bg-slate-100 text-slate-700 border border-slate-300'} space-y-3 transition-all">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <div class="text-[11px] font-mono-code ${isModul2 ? 'text-emerald-400' : 'text-slate-500'}">
+                          ${isModul2 ? '● State Aktif (Bisa Berubah)' : '○ Hanya Props (Kaku / Mati)'}
+                        </div>
+                        <div class="text-lg font-black mt-0.5">Halo, ${escapeHtml(AppState.s1StudentName)}! 👋</div>
+                      </div>
+                      <button id="btnS1Like" type="button" class="px-3 py-1.5 rounded-xl font-bold text-xs transition ${isModul2 ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-md' : 'bg-slate-300 text-slate-600'}">
+                        ❤️ ${AppState.s1Likes}
+                      </button>
+                    </div>
+
+                    <!-- Interactive Name Input -->
+                    <div class="space-y-1">
+                      <label class="block text-xs font-semibold ${isModul2 ? 'text-slate-300' : 'text-slate-500'}">
+                        Ketik Namamu (Uji Event <code class="font-mono-code ${isModul2 ? 'text-emerald-300' : 'text-slate-700'}">onChange</code>):
+                      </label>
+                      <input id="inputS1Name" type="text" value="${escapeHtml(AppState.s1StudentName)}" ${!isModul2 ? 'readonly' : ''} class="w-full px-3 py-1.5 rounded-xl text-xs font-semibold ${isModul2 ? 'bg-slate-950 text-white border border-emerald-500/50 focus:outline-none' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}" />
+                    </div>
+
+                    <!-- Click Counter -->
+                    <div class="flex items-center justify-between pt-2 border-t ${isModul2 ? 'border-slate-700' : 'border-slate-300'}">
+                      <div>
+                        <div class="text-[11px] ${isModul2 ? 'text-slate-400' : 'text-slate-500'}">Penghitung Klik (<code class="font-mono-code ${isModul2 ? 'text-amber-300' : 'text-slate-700'}">useState</code>):</div>
+                        <div class="text-xl font-black ${isModul2 ? 'text-emerald-400' : 'text-slate-600'}">${AppState.s1Clicks} kali diklik</div>
+                      </div>
+                      <div class="flex gap-1.5">
+                        <button id="btnS1Click" type="button" class="px-3 py-1.5 rounded-xl font-extrabold text-xs transition ${isModul2 ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950' : 'bg-slate-300 text-slate-600'}">
+                          + Tambah Klik
+                        </button>
+                        <button id="btnS1Reset" type="button" class="px-2.5 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs transition">
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="p-2.5 rounded-xl ${isModul2 ? 'bg-emerald-50 border border-emerald-200 text-emerald-950' : 'bg-rose-50 border border-rose-200 text-rose-950'} text-xs font-medium leading-snug">
+                    ${isModul2
+                      ? (AppState.s1Clicks >= 5
+                          ? '🎉 <strong>Conditional Rendering Aktif:</strong> "Wah, kamu rajin sekali mengklik!" (Muncul otomatis karena klik >= 5).'
+                          : '💡 <strong>Mode Modul 2 Aktif:</strong> Coba ketik nama, klik ❤️, atau klik "+ Tambah Klik" 5 kali!')
+                      : `⚠️ <strong>Mode Modul 1 (Statis):</strong> ${AppState.s1StaticNotice || 'Tombol & ketikan tidak bisa mengubah layar karena belum punya State!'}`
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 02: TEORI 1 - PROPS VS STATE
+        // =====================================================================
+        case 1:
+          return `
+            ${renderSlideHeader(meta, 'Props hanya untuk menampilkan data titipan dari induk, sedangkan State adalah ingatan milik komponen sendiri.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                  <thead>
+                    <tr class="bg-slate-900 text-white">
+                      <th class="p-3 font-bold">Perbedaan</th>
+                      <th class="p-3 font-bold text-sky-300">📦 Props (Data Titipan)</th>
+                      <th class="p-3 font-bold text-emerald-300">📔 State (Ingatan Sendiri)</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr>
+                      <td class="p-3 font-bold text-slate-900">Analogi</td>
+                      <td class="p-3 text-slate-700">Uang jajan titipan orang tua.</td>
+                      <td class="p-3 text-slate-700">Catatan di buku harian sendiri.</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-slate-900">Asal Data</td>
+                      <td class="p-3 text-slate-700">Dikirim dari induk (<code class="font-mono-code bg-slate-100 text-slate-900 px-1.5 py-0.5 rounded">parent</code>).</td>
+                      <td class="p-3 text-slate-700">Disimpan di dalam komponen sendiri.</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-slate-900">Boleh Diubah?</td>
+                      <td class="p-3 font-extrabold text-rose-600">Tidak Boleh (Read-Only).</td>
+                      <td class="p-3 font-extrabold text-emerald-700">Boleh, lewat setter (<code class="font-mono-code bg-emerald-50 text-emerald-900 px-1.5 py-0.5 rounded">setJumlah</code>).</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-slate-900">Efek ke Layar</td>
+                      <td class="p-3 text-slate-700">Berubah jika induk kirim nilai baru.</td>
+                      <td class="p-3 text-slate-700"><strong>Otomatis menggambar ulang layar!</strong></td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-bold text-slate-900">Cara Menulis</td>
+                      <td class="p-3 font-mono-code text-xs text-sky-950 bg-sky-50 font-bold">function Kartu({ judul })</td>
+                      <td class="p-3 font-mono-code text-xs text-emerald-950 bg-emerald-50 font-bold">const [judul, setJudul] = useState('')</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 shadow-sm p-5 space-y-3">
+                <h3 class="text-base font-extrabold text-slate-900">Uji Langsung: Props vs State</h3>
+                <div class="p-3.5 rounded-2xl bg-sky-50 border border-sky-200 space-y-2">
+                  <div class="text-xs font-bold text-sky-950">📦 Props Titipan Induk: <code class="font-mono-code bg-white text-sky-900 px-2 py-0.5 rounded border border-sky-200">nama = "Budi"</code></div>
+                  <button id="btnS3TryMutateProps" type="button" class="w-full py-2 rounded-xl bg-white hover:bg-rose-50 text-rose-700 border border-rose-300 text-xs font-extrabold transition">
+                    ❌ Coba Paksa Ubah: props.nama = "Andi"
+                  </button>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
+                  <div class="text-xs font-bold text-emerald-950">📔 State Buku Harian: <code class="font-mono-code bg-white text-emerald-900 px-2 py-0.5 rounded border border-emerald-200">tabungan = Rp ${AppState.s3StateCount.toLocaleString('id-ID')}</code></div>
+                  <button id="btnS3UpdateState" type="button" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition">
+                    ✅ Ubah Lewat Setter: setTabungan(tabungan + 5000)
+                  </button>
+                </div>
+                <div class="p-3 rounded-2xl bg-slate-900 text-emerald-300 font-mono-code text-xs leading-snug">
+                  ${escapeHtml(AppState.s3Status)}
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 03: TEORI 2 - MENGAPA VARIABEL BIASA (let) TIDAK CUKUP?
+        // =====================================================================
+        case 2:
+          return `
+            ${renderSlideHeader(meta, 'Analogi Papan Skor Stadion: Wasit mencatat gol di kertas saku (let), tetapi papan skor tidak berubah karena operator layar tidak diberi tahu!')}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
+              <div class="bg-white rounded-3xl border-2 border-rose-200 p-5 flex flex-col justify-between space-y-3.5 shadow-xs">
+                <div>
+                  <span class="px-3 py-1 rounded-lg bg-rose-100 text-rose-800 font-mono-code text-xs font-bold">❌ CARA LAMA: Variabel Biasa (let jumlah = 0)</span>
+                  <div class="text-xs sm:text-sm text-slate-700 space-y-1 font-medium mt-2">
+                    <div>1. Angka berubah di memori, tapi <strong>React tidak tahu</strong> layar harus diubah.</div>
+                    <div>2. Saat komponen digambar ulang, <code class="font-mono-code bg-rose-50 text-rose-900 px-1 rounded font-bold">let jumlah = 0</code> <strong>kembali jadi 0 lagi</strong>!</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-center">
+                  <div class="p-3.5 rounded-2xl bg-slate-100 border border-slate-300">
+                    <div class="text-[11px] font-bold text-slate-500">🖥️ PAPAN SKOR (LAYAR)</div>
+                    <div class="text-3xl font-black text-slate-900 my-0.5">0</div>
+                    <div class="text-[11px] text-rose-600 font-bold">Tetap 0 (Membeku!)</div>
+                  </div>
+                  <div class="p-3.5 rounded-2xl bg-slate-900 text-white">
+                    <div class="text-[11px] font-bold text-amber-300 font-mono-code">📝 KERTAS SAKU (CONSOLE)</div>
+                    <div class="text-3xl font-black text-emerald-400 my-0.5 font-mono-code">${AppState.s4LetMem}</div>
+                    <div class="text-[11px] text-slate-300">Naik di memori</div>
+                  </div>
+                </div>
+
+                <button id="btnS4ClickLet" type="button" class="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs sm:text-sm transition">
+                  Klik Tambah dengan Variabel Biasa (jumlah = jumlah + 1)
+                </button>
+              </div>
+
+              <div class="bg-white rounded-3xl border-2 border-emerald-400 p-5 flex flex-col justify-between space-y-3.5 shadow-xs">
+                <div>
+                  <span class="px-3 py-1 rounded-lg bg-emerald-100 text-emerald-900 font-mono-code text-xs font-bold">✅ CARA REACT: Hook useState(0)</span>
+                  <div class="text-xs sm:text-sm text-slate-700 space-y-1 font-medium mt-2">
+                    <div>1. Nilainya <strong>disimpan &amp; diingat oleh React</strong> antar-render.</div>
+                    <div>2. Saat <code class="font-mono-code bg-emerald-50 text-emerald-900 px-1 rounded font-bold">setJumlah()</code> dipanggil, React <strong>otomatis memperbarui layar</strong>!</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-center">
+                  <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300">
+                    <div class="text-[11px] font-bold text-emerald-800">🖥️ PAPAN SKOR (LAYAR)</div>
+                    <div class="text-3xl font-black text-emerald-700 my-0.5">${AppState.s4StateVal}</div>
+                    <div class="text-[11px] text-emerald-700 font-bold">Ikut Berubah Otomatis!</div>
+                  </div>
+                  <div class="p-3.5 rounded-2xl bg-slate-900 text-white">
+                    <div class="text-[11px] font-bold text-emerald-400 font-mono-code">🧠 INGATAN STATE REACT</div>
+                    <div class="text-3xl font-black text-emerald-400 my-0.5 font-mono-code">${AppState.s4StateVal}</div>
+                    <div class="text-[11px] text-slate-300">Tersimpan Aman</div>
+                  </div>
+                </div>
+
+                <div class="flex gap-2">
+                  <button id="btnS4ClickState" type="button" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition">
+                    Klik Tambah dengan setJumlah(jumlah + 1)
+                  </button>
+                  <button id="btnS4ResetBoth" type="button" class="px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs sm:text-sm transition">
+                    Reset
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 04: TEORI 3 - ANATOMI HOOK useState & 5 TAHAP RENDER
+        // =====================================================================
+        case 3: {
+          const steps = [
+            { no: 1, title: '1. Pengguna Mengklik Tombol', desc: 'Tombol diklik, fungsi event handler berjalan.' },
+            { no: 2, title: '2. Memanggil Fungsi Pengubah', desc: 'Memanggil setJumlah(jumlah + 1).' },
+            { no: 3, title: '3. React Menyimpan Nilai Baru', desc: 'React menjadwalkan gambar ulang layar.' },
+            { no: 4, title: '4. Komponen Dijalankan Ulang', desc: 'jumlah kini berisi nilai terbaru.' },
+            { no: 5, title: '5. Layar Diperbarui (Rekonsiliasi)', desc: 'Hanya bagian angka yang berubah diupdate.' }
+          ];
+          return `
+            ${renderSlideHeader(meta, 'Hook useState memberikan 2 hal sekaligus: nilai saat ini dan fungsi untuk mengubahnya.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6 space-y-3.5">
+                <div class="code-window-dark bg-[#0F172A] text-white p-4 rounded-3xl border border-slate-700 space-y-3 shadow-lg">
+                  <div class="text-xs font-mono-code text-slate-400">// Cara menulis useState (Array Destructuring):</div>
+                  <div class="font-mono-code text-xs sm:text-sm bg-slate-950 p-3.5 rounded-2xl border border-slate-800 leading-relaxed">
+                    <div><span class="text-pink-400 font-bold">import</span> <span class="text-slate-100">{</span> <span class="text-emerald-300 font-semibold">useState</span> <span class="text-slate-100">}</span> <span class="text-pink-400 font-bold">from</span> <span class="text-amber-300">'react'</span><span class="text-slate-100">;</span></div>
+                    <div class="mt-1.5"><span class="text-pink-400 font-bold">const</span> <span class="text-slate-100">[</span><span class="text-sky-300 font-bold">jumlah</span><span class="text-slate-100">,</span> <span class="text-emerald-300 font-bold">setJumlah</span><span class="text-slate-100">] =</span> <span class="text-emerald-300 font-semibold">useState</span><span class="text-slate-100">(</span><span class="text-amber-300 font-bold">0</span><span class="text-slate-100">);</span></div>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div class="p-2.5 rounded-xl bg-sky-500/15 border border-sky-400/30">
+                      <div class="font-mono-code font-bold text-sky-300">1. jumlah</div>
+                      <div class="text-slate-200 text-[11px] mt-0.5">Nilai saat ini</div>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-400/30">
+                      <div class="font-mono-code font-bold text-emerald-300">2. setJumlah</div>
+                      <div class="text-slate-200 text-[11px] mt-0.5">Fungsi pengubah</div>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-amber-500/15 border border-amber-400/30">
+                      <div class="font-mono-code font-bold text-amber-300">3. useState(0)</div>
+                      <div class="text-slate-200 text-[11px] mt-0.5">Nilai awal (0)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-xs sm:text-sm text-amber-950 font-medium">
+                  📌 <strong>Aturan Wajib Hook:</strong> Tulis <code class="font-mono-code bg-white text-slate-900 px-1.5 py-0.5 rounded font-bold">useState</code> di baris paling atas fungsi komponen (jangan di dalam <code class="font-mono-code bg-white text-slate-900 px-1.5 py-0.5 rounded font-bold">if</code> atau loop).
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-4 space-y-2.5 shadow-sm">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <div class="font-extrabold text-sm text-slate-900">Simulasi 5 Tahap Saat Diklik (Skor: <span class="text-emerald-600">${AppState.s5Count}</span>)</div>
+                  <button id="btnS5NextStep" type="button" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">
+                    ▶ Tahap Berikutnya
+                  </button>
+                </div>
+                <div class="space-y-1.5">
+                  ${steps.map((st) => {
+                    const active = AppState.s5Step === st.no;
+                    return `
+                      <div class="px-3 py-2 rounded-xl border flex items-center justify-between ${active ? 'bg-emerald-50 border-emerald-500 shadow-2xs' : 'bg-slate-50 border-slate-200 opacity-75'}">
+                        <div>
+                          <div class="text-xs font-bold text-slate-900">${st.title}</div>
+                          <div class="text-[11px] text-slate-600">${st.desc}</div>
+                        </div>
+                        <span class="px-2 py-0.5 rounded font-mono-code text-[11px] font-bold ${active ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'}">
+                          ${active ? '⚡ AKTIF' : `Tahap ${st.no}`}
+                        </span>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 05: TEORI 4 - EVENT HANDLING
+        // =====================================================================
+        case 4:
+          return `
+            ${renderSlideHeader(meta, 'Event adalah aksi yang dilakukan pengguna (klik tombol, mengetik di kotak input, atau menekan Enter).')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-7 space-y-3.5">
+                <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+                  <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                      <tr class="bg-slate-900 text-white">
+                        <th class="p-3 font-mono-code text-emerald-300">Event</th>
+                        <th class="p-3">Kapan Terjadi?</th>
+                        <th class="p-3 font-mono-code text-amber-300">Contoh Penulisan di JSX</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                      <tr>
+                        <td class="p-3 font-mono-code font-bold text-emerald-700">onClick</td>
+                        <td class="p-3 text-slate-700">Saat tombol diklik.</td>
+                        <td class="p-3 font-mono-code text-xs text-slate-900 font-semibold">&lt;button onClick={tambah}&gt;Klik&lt;/button&gt;</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 font-mono-code font-bold text-emerald-700">onChange</td>
+                        <td class="p-3 text-slate-700">Setiap ketikan / centang.</td>
+                        <td class="p-3 font-mono-code text-xs text-slate-900 font-semibold">onChange={(e) =&gt; setTeks(e.target.value)}</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3 font-mono-code font-bold text-emerald-700">onSubmit</td>
+                        <td class="p-3 text-slate-700">Saat form dikirim (Enter).</td>
+                        <td class="p-3 font-mono-code text-xs text-slate-900 font-semibold">&lt;form onSubmit={tanganiKirim}&gt;</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="p-3.5 rounded-2xl bg-rose-50 border-2 border-rose-200">
+                    <div class="text-[11px] font-mono-code font-bold text-rose-700">❌ JANGAN PAKAI KURUNG ()</div>
+                    <div class="font-mono-code font-black text-sm text-rose-900 my-0.5">onClick={tambah()}</div>
+                    <div class="text-xs text-rose-900">Langsung jalan sendiri saat halaman dibuka!</div>
+                  </div>
+                  <div class="p-3.5 rounded-2xl bg-emerald-50 border-2 border-emerald-300">
+                    <div class="text-[11px] font-mono-code font-bold text-emerald-800">✅ TITIPKAN TANPA KURUNG ()</div>
+                    <div class="font-mono-code font-black text-sm text-emerald-950 my-0.5">onClick={tambah}</div>
+                    <div class="text-xs text-emerald-900">Dijalankan nanti saat tombol benar-benar diklik.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <h3 class="text-sm font-extrabold text-slate-900">Uji <code class="font-mono-code text-emerald-700">e.target.value</code> &amp; <code class="font-mono-code text-emerald-700">e.preventDefault()</code></h3>
+                <label class="inline-flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer bg-slate-100 px-3 py-1.5 rounded-xl">
+                  <input id="chkS6PreventDefault" type="checkbox" ${AppState.s6PreventDefaultOn ? 'checked' : ''} class="w-4 h-4 rounded text-emerald-600" />
+                  <span>Pasang <code class="font-mono-code text-emerald-700">event.preventDefault()</code> (Cegah Reload)</span>
+                </label>
+                <form id="formS6Demo" class="space-y-2.5">
+                  <input id="inputS6Text" type="text" value="${escapeHtml(AppState.s6Text)}" placeholder="Ketik sesuatu di sini..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs text-slate-900" />
+                  <div class="text-xs text-slate-600">Isi <code class="font-mono-code font-bold text-slate-900">e.target.value</code>: <strong id="s6LiveValueBadge" class="font-mono-code text-emerald-700">"${escapeHtml(AppState.s6Text)}"</strong></div>
+                  <button type="submit" class="w-full py-2 rounded-xl bg-[#1B365D] text-white font-bold text-xs">Kirim Formulir (Uji onSubmit)</button>
+                </form>
+                <div class="p-3 rounded-xl bg-slate-900 text-emerald-300 font-mono-code text-xs">
+                  ${escapeHtml(AppState.s6SubmittedMsg)}
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 06: TEORI 5 - ATURAN EMAS STATE (JANGAN CORET FOTO LAMA!)
+        // =====================================================================
+        case 5: {
+          const rules = [
+            { title: '1. Mengubah Angka/Teks', wrong: 'jumlah = jumlah + 1;', right: 'setJumlah(jumlah + 1);', note: 'Selalu gunakan fungsi setter agar React memperbarui layar.' },
+            { title: '2. Menambah Isi Array', wrong: 'daftar.push(baru);', right: 'setDaftar([...daftar, baru]);', note: 'Spread (...daftar) menyalin tugas lama ke array baru + tugas baru.' },
+            { title: '3. Menghapus Isi Array', wrong: 'daftar.splice(i, 1);', right: 'setDaftar(daftar.filter((t) => t.id !== id));', note: '.filter() menghasilkan array baru tanpa item yang dihapus.' },
+            { title: '4. Mengubah Properti Objek', wrong: 'tugas.selesai = true;', right: '{ ...tugas, selesai: true }', note: 'Salin objek dengan ...tugas, lalu timpa properti selesai.' }
+          ];
+          const cur = rules[AppState.s7Tab];
+          return `
+            ${renderSlideHeader(meta, 'Analogi Foto: Jangan mencoret foto lama (mutasi langsung), tetapi cetaklah foto baru agar React mendeteksi perubahan!')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6 space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                  ${rules.map((r, i) => `
+                    <button type="button" data-s7-tab="${i}" class="btn-s7-tab p-2.5 rounded-xl border text-left font-bold text-xs transition ${AppState.s7Tab === i ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-white text-slate-800 border-slate-200'}">
+                      ${r.title}
+                    </button>
+                  `).join('')}
+                </div>
+                <div class="bg-white rounded-3xl border border-slate-200 p-4 space-y-2.5 shadow-xs">
+                  <div class="p-3 rounded-xl bg-rose-50 border border-rose-200">
+                    <div class="text-[11px] font-mono-code font-bold text-rose-700">❌ CARA SALAH (Mutasi Langsung):</div>
+                    <div class="font-mono-code text-xs sm:text-sm font-bold text-rose-950 mt-0.5">${escapeHtml(cur.wrong)}</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-300">
+                    <div class="text-[11px] font-mono-code font-bold text-emerald-800">✅ CARA BENAR (Immutable Baru):</div>
+                    <div class="font-mono-code text-xs sm:text-sm font-bold text-emerald-950 mt-0.5">${escapeHtml(cur.right)}</div>
+                  </div>
+                  <p class="text-xs text-slate-600 font-medium">💡 ${escapeHtml(cur.note)}</p>
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-sm text-slate-900">Coba Langsung pada Array <code class="font-mono-code text-emerald-700">daftarTugas</code></span>
+                  <button id="btnS7Reset" type="button" class="px-2.5 py-1 rounded-lg bg-slate-100 text-xs font-bold text-slate-700">Reset</button>
+                </div>
+                <div class="space-y-1.5">
+                  ${AppState.s7Items.slice(0, 3).map((it) => `
+                    <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm">
+                      <span class="${it.selesai ? 'line-through text-slate-400' : 'font-bold text-slate-800'}">${escapeHtml(it.judul)}</span>
+                      <span class="font-mono-code text-xs font-bold ${it.selesai ? 'text-emerald-600' : 'text-amber-600'}">selesai: ${it.selesai}</span>
+                    </div>
+                  `).join('')}
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                  <button id="btnS7SpreadAdd" type="button" class="py-2 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">+ Tambah (...)</button>
+                  <button id="btnS7MapToggle" type="button" class="py-2 px-2 rounded-xl bg-[#1B365D] hover:opacity-90 text-white text-xs font-bold">✓ Ubah (.map)</button>
+                  <button id="btnS7FilterDel" type="button" class="py-2 px-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold">🗑️ Hapus (.filter)</button>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-900 text-emerald-300 font-mono-code text-xs">
+                  ${escapeHtml(AppState.s7Log)}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 07: TEORI 6 - FORMULIR TERKENDALI (CONTROLLED FORM)
+        // =====================================================================
+        case 6: {
+          const val = AppState.s8Input;
+          const isEmpty = val.trim() === '';
+          const isTooLong = val.length > 50;
+          const isInvalid = isEmpty || isTooLong;
+          return `
+            ${renderSlideHeader(meta, 'Analogi Layar Kasir & Mesin Hitung: Apa pun yang diketik langsung masuk ke state (onChange), dan layar input membaca dari state (value={teks}).')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6">
+                <div class="bg-white rounded-3xl border border-slate-200 p-5 space-y-3.5 shadow-sm">
+                  <div class="flex flex-wrap gap-2">
+                    <button type="button" data-s8-preset="ok" class="btn-s8-preset px-3 py-1 rounded-lg bg-emerald-100 text-emerald-900 text-xs font-bold">[ Teks Normal ]</button>
+                    <button type="button" data-s8-preset="long" class="btn-s8-preset px-3 py-1 rounded-lg bg-rose-100 text-rose-900 text-xs font-bold">[ &gt; 50 Karakter ]</button>
+                    <button type="button" data-s8-preset="empty" class="btn-s8-preset px-3 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-bold">[ Kosongkan ]</button>
+                  </div>
+
+                  <div class="modul2-kartu !mb-0">
+                    <h2>Tambah Tugas Baru</h2>
+                    <div class="modul2-baris">
+                      <input id="inputS8Teks" type="text" class="modul2-input" value="${escapeHtml(val)}" placeholder="Ketik judul tugas..." />
+                      <button type="button" class="modul2-tombol" ${isInvalid ? 'disabled' : ''}>Tambah</button>
+                    </div>
+                    ${isTooLong ? `<p class="modul2-galat">Judul tugas maksimal 50 karakter. (${val.length}/50)</p>` : ''}
+                  </div>
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 space-y-2.5">
+                <div class="p-3.5 rounded-2xl border bg-white border-slate-200 flex items-center justify-between">
+                  <div>
+                    <div class="text-xs sm:text-sm font-extrabold text-slate-900">1. <code class="font-mono-code bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded">onChange</code> (Kasir Mengetik)</div>
+                    <div class="text-xs text-slate-600 mt-0.5">Menyimpan ketikan ke <code class="font-mono-code font-bold text-slate-800">setTeks(e.target.value)</code>.</div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 font-mono-code text-xs font-bold">${val.length}/50</span>
+                </div>
+                <div class="p-3.5 rounded-2xl border bg-white border-slate-200 flex items-center justify-between">
+                  <div>
+                    <div class="text-xs sm:text-sm font-extrabold text-slate-900">2. <code class="font-mono-code bg-sky-50 text-sky-800 px-1.5 py-0.5 rounded">value={teks}</code> (Layar Kasir)</div>
+                    <div class="text-xs text-slate-600 mt-0.5">Kotak input selalu menampilkan isi state <code class="font-mono-code font-bold text-slate-800">teks</code>.</div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-lg bg-sky-100 text-sky-900 font-mono-code text-xs font-bold">Sinkron</span>
+                </div>
+                <div class="p-3.5 rounded-2xl border ${isInvalid ? 'bg-rose-50 border-rose-300' : 'bg-emerald-50 border-emerald-300'} flex items-center justify-between">
+                  <div>
+                    <div class="text-xs sm:text-sm font-extrabold text-slate-900">3. Validasi Otomatis (<code class="font-mono-code font-bold">disabled</code>)</div>
+                    <div class="text-xs text-slate-700 mt-0.5">Tombol terkunci saat input kosong atau &gt; 50 karakter.</div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-lg font-mono-code text-xs font-bold ${isInvalid ? 'bg-rose-600 text-white' : 'bg-emerald-600 text-white'}">
+                    ${isTooLong ? 'Ditolak' : isEmpty ? 'Kosong' : 'Valid'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 08: TEORI 7 - CONDITIONAL RENDERING
+        // =====================================================================
+        case 7:
+          return `
+            ${renderSlideHeader(meta, 'Cara mengatur elemen mana yang muncul atau bersembunyi berdasarkan kondisi state.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-7">
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+                  <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                      <tr class="bg-slate-900 text-white">
+                        <th class="p-3.5">Pola</th>
+                        <th class="p-3.5 font-mono-code text-emerald-300">Cara Menulis di JSX</th>
+                        <th class="p-3.5">Cara Membacanya</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                      <tr>
+                        <td class="p-3.5 font-bold text-slate-900">1. Operator <code class="font-mono-code bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded">&amp;&amp;</code></td>
+                        <td class="p-3.5 font-mono-code text-xs text-slate-900 font-bold">{isError &amp;&amp; &lt;p&gt;Galat&lt;/p&gt;}</td>
+                        <td class="p-3.5 text-slate-700">"Jika benar tampilkan, jika salah sembunyikan."</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3.5 font-bold text-slate-900">2. Ternary <code class="font-mono-code bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded">? :</code></td>
+                        <td class="p-3.5 font-mono-code text-xs text-slate-900 font-bold">{selesai ? 'Selesai' : 'Belum'}</td>
+                        <td class="p-3.5 text-slate-700">"Jika benar pilih A, jika salah pilih B."</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3.5 font-bold text-slate-900">3. <code class="font-mono-code bg-emerald-50 text-emerald-800 px-1.5 py-0.5 rounded">className</code> Dinamis</td>
+                        <td class="p-3.5 font-mono-code text-xs text-slate-900 font-bold">className={selesai ? 'selesai' : ''}</td>
+                        <td class="p-3.5 text-slate-700">"Jika selesai, pasang class CSS <code class="font-mono-code font-bold">'selesai'</code>."</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <h3 class="text-base font-extrabold text-slate-900">Klik Saklar Kondisi di Bawah:</h3>
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <span class="text-xs sm:text-sm font-bold text-slate-800">Kondisi <code class="font-mono-code text-rose-700">isError</code> (&amp;&amp;)</span>
+                  <button id="btnS9ToggleError" type="button" class="px-3.5 py-1 rounded-lg font-mono-code text-xs font-bold ${AppState.s9IsError ? 'bg-rose-600 text-white' : 'bg-slate-200 text-slate-800'}">
+                    isError = ${AppState.s9IsError}
+                  </button>
+                </div>
+                <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <span class="text-xs sm:text-sm font-bold text-slate-800">Kondisi <code class="font-mono-code text-emerald-700">selesai</code> (? :)</span>
+                  <button id="btnS9ToggleSelesai" type="button" class="px-3.5 py-1 rounded-lg font-mono-code text-xs font-bold ${AppState.s9Selesai ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-800'}">
+                    selesai = ${AppState.s9Selesai}
+                  </button>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-slate-900 text-white space-y-2">
+                  <div class="text-xs font-mono-code text-slate-400">// Hasil Tampilan di Layar:</div>
+                  ${AppState.s9IsError ? `<div class="text-rose-400 font-bold text-xs sm:text-sm">⚠️ Terjadi galat: Judul terlalu panjang!</div>` : `<div class="text-slate-400 text-xs italic">(Pesan galat disembunyikan)</div>`}
+                  <div class="flex items-center justify-between pt-1.5 border-t border-slate-800">
+                    <span class="${AppState.s9Selesai ? 'line-through text-slate-400' : 'text-white font-bold'} text-sm">Kerjakan Laporan Modul 2</span>
+                    <span class="px-2 py-0.5 rounded text-xs font-bold ${AppState.s9Selesai ? 'bg-emerald-400 text-slate-950' : 'bg-amber-400 text-slate-950'}">
+                      ${AppState.s9Selesai ? 'Selesai' : 'Belum'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 09: TEORI 8 - KOMUNIKASI ANTARKOMPONEN (LIFTING STATE UP)
+        // =====================================================================
+        case 8:
+          return `
+            ${renderSlideHeader(meta, 'Analogi Dosen & Ketua Kelas: Data turun dari Induk ke Anak lewat props. Anak melapor ke Induk dengan memanggil fungsi titipan Induk.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-xs">
+                <div class="p-3.5 rounded-2xl bg-slate-900 text-white text-center space-y-0.5">
+                  <div class="text-sm sm:text-base font-extrabold text-emerald-400">👨‍🏫 App (Komponen Induk / Dosen)</div>
+                  <div class="text-xs font-mono-code text-slate-200">Menyimpan state: <span class="text-amber-300 font-bold">daftarTugas (${AppState.s10TasksCount} tugas)</span></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 text-center font-mono-code text-xs">
+                  <div class="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-950">
+                    <div>⬇ Titip fungsi: <b>props onTambah</b></div>
+                    <div class="mt-0.5 text-emerald-800 font-bold">⬆ Lapor: onTambah(judul)</div>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+                    <div>⬇ Kirim data: <b>tugas, onHapus</b></div>
+                    <div class="mt-0.5 text-rose-700 font-bold">⬆ Lapor: onHapus(id)</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1.5">
+                    <div class="font-extrabold text-xs sm:text-sm text-slate-900">🙋‍♂️ Anak 1: FormTugas</div>
+                    <button id="btnS10SimAdd" type="button" class="w-full py-2 rounded-xl bg-[#1B365D] hover:opacity-90 text-white text-xs font-bold transition">
+                      📞 Panggil onTambah()
+                    </button>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1.5">
+                    <div class="font-extrabold text-xs sm:text-sm text-slate-900">🙋‍♀️ Anak 2: ItemTugas</div>
+                    <button id="btnS10SimDel" type="button" class="w-full py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition">
+                      📞 Panggil onHapus(id)
+                    </button>
+                  </div>
+                </div>
+
+                <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-300 text-xs font-bold text-emerald-950 text-center">
+                  📡 ${escapeHtml(AppState.s10LastSignal)}
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 space-y-3">
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-1.5">
+                  <span class="px-2.5 py-0.5 rounded bg-amber-100 text-amber-900 text-xs font-bold">LIFTING STATE UP</span>
+                  <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                    Karena daftar tugas dibutuhkan bersama oleh <code class="font-mono-code font-bold text-slate-900">FormTugas</code> dan <code class="font-mono-code font-bold text-slate-900">ItemTugas</code>, maka state-nya disimpan di komponen induk (<code class="font-mono-code font-bold">App</code>).
+                  </p>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-1.5">
+                  <span class="px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-900 text-xs font-bold">PROPS children (BINGKAI FOTO)</span>
+                  <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                    Apa pun yang diletakkan di antara <code class="font-mono-code font-bold text-slate-900">&lt;Kartu&gt;...&lt;/Kartu&gt;</code> otomatis diterima lewat props <code class="font-mono-code font-bold text-emerald-700">children</code>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 10: TEORI 9 - useEffect (PETUGAS KEBERSIHAN)
+        // =====================================================================
+        case 9:
+          return `
+            ${renderSlideHeader(meta, 'Analogi Petugas Kebersihan: Menunggu acara (proses menggambar layar) selesai dulu, baru menyinkronkan data ke luar React.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-7">
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs">
+                  <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                    <thead>
+                      <tr class="bg-slate-900 text-white">
+                        <th class="p-3.5 font-mono-code text-emerald-300">Dependency Array</th>
+                        <th class="p-3.5">Kapan Dijalankan?</th>
+                        <th class="p-3.5">Kegunaan</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                      <tr class="${AppState.s11DepMode === 'none' ? 'bg-rose-50' : ''}">
+                        <td class="p-3.5 font-mono-code font-bold text-rose-700">Tanpa array</td>
+                        <td class="p-3.5 text-slate-700">Setiap kali layar digambar ulang.</td>
+                        <td class="p-3.5 text-slate-600">Jarang dipakai (berat).</td>
+                      </tr>
+                      <tr class="${AppState.s11DepMode === 'empty' ? 'bg-sky-50' : ''}">
+                        <td class="p-3.5 font-mono-code font-bold text-sky-700">[] (kosong)</td>
+                        <td class="p-3.5 text-slate-700"><strong>Hanya 1 kali</strong> saat pertama tampil.</td>
+                        <td class="p-3.5 text-slate-600">Mencatat log awal.</td>
+                      </tr>
+                      <tr class="${AppState.s11DepMode === 'state' ? 'bg-emerald-50' : ''}">
+                        <td class="p-3.5 font-mono-code font-bold text-emerald-700">[daftarTugas]</td>
+                        <td class="p-3.5 text-slate-700">Saat pertama tampil &amp; saat <code class="font-mono-code font-bold">daftarTugas</code> berubah.</td>
+                        <td class="p-3.5 text-slate-600">Simpan ke <code class="font-mono-code font-bold">localStorage</code>.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <h3 class="text-base font-extrabold text-slate-900">Simulator Dependency Array</h3>
+                <div class="grid grid-cols-3 gap-2">
+                  <button type="button" data-s11-mode="none" class="btn-s11-mode py-1.5 rounded-xl font-mono-code text-xs font-bold border ${AppState.s11DepMode === 'none' ? 'bg-rose-600 text-white border-rose-600' : 'bg-slate-50 text-slate-800'}">Tanpa Array</button>
+                  <button type="button" data-s11-mode="empty" class="btn-s11-mode py-1.5 rounded-xl font-mono-code text-xs font-bold border ${AppState.s11DepMode === 'empty' ? 'bg-sky-600 text-white border-sky-600' : 'bg-slate-50 text-slate-800'}">[] Kosong</button>
+                  <button type="button" data-s11-mode="state" class="btn-s11-mode py-1.5 rounded-xl font-mono-code text-xs font-bold border ${AppState.s11DepMode === 'state' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-50 text-slate-800'}">[daftarTugas]</button>
+                </div>
+                <div class="grid grid-cols-2 gap-3 text-center">
+                  <div class="p-3 rounded-2xl bg-slate-100">
+                    <div class="text-[11px] font-bold text-slate-500">LAYAR DIGAMBAR</div>
+                    <div class="text-2xl font-black text-slate-900">${AppState.s11Renders}x</div>
+                  </div>
+                  <div class="p-3 rounded-2xl bg-emerald-50 border border-emerald-200">
+                    <div class="text-[11px] font-bold text-emerald-800">EFEK DIJALANKAN</div>
+                    <div class="text-2xl font-black text-emerald-700">${AppState.s11EffectRuns}x</div>
+                  </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <button id="btnS11OtherRender" type="button" class="py-2 rounded-xl bg-slate-800 text-white text-xs font-bold">🔄 Render Biasa</button>
+                  <button id="btnS11ChangeTugas" type="button" class="py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold">📝 Ubah daftarTugas</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 11: LANGKAH 1A - PETA 6 BERKAS & INISIALISASI VITE
+        // =====================================================================
+        case 10: {
+          const files = [
+            { name: 'src/App.jsx', cat: 'Komponen Induk', role: 'Menyimpan state daftarTugas serta fungsi tambah, centang, dan hapus.' },
+            { name: 'src/Kartu.jsx', cat: 'Pembungkus', role: 'Bingkai kartu putih yang menerima props judul dan children.' },
+            { name: 'src/Penghitung.jsx', cat: 'Latihan State', role: 'Komponen pemanasan membandingkan variabel let vs useState.' },
+            { name: 'src/FormTugas.jsx', cat: 'Komponen Anak', role: 'Formulir input terkendali dengan validasi maksimal 50 karakter.' },
+            { name: 'src/ItemTugas.jsx', cat: 'Komponen Anak', role: 'Menampilkan satu baris tugas (kotak centang & tombol hapus).' },
+            { name: 'src/App.css', cat: 'Berkas Gaya CSS', role: 'Mengatur tampilan kartu, tombol biru/merah, dan teks tercoret.' }
+          ];
+          const cur = files[AppState.s12SelectedFile];
+          return `
+            ${renderSlideHeader(meta, 'Aplikasi "Daftar Tugas Praktikum" dibangun secara bertahap dalam 6 berkas di folder src/.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6 space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                  ${files.map((f, i) => `
+                    <button type="button" data-s12-file="${i}" class="btn-s12-file p-3 rounded-2xl border text-left transition ${AppState.s12SelectedFile === i ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-800 border-slate-200'}">
+                      <div class="font-mono-code font-bold text-xs sm:text-sm ${AppState.s12SelectedFile === i ? 'text-emerald-300' : 'text-slate-900'}">${f.name}</div>
+                      <div class="text-[11px] ${AppState.s12SelectedFile === i ? 'text-slate-300' : 'text-slate-500'}">${f.cat}</div>
+                    </button>
+                  `).join('')}
+                </div>
+                <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-300 text-xs sm:text-sm text-emerald-950 font-medium">
+                  📁 <strong>Peran <code class="font-mono-code font-bold">${cur.name}</code>:</strong> ${cur.role}
+                </div>
+              </div>
+
+              <div class="lg:col-span-6">
+                ${renderCodeWindow({
+                  filename: 'Terminal — Perintah Setup Proyek Vite',
+                  code: `# 1. Masuk ke folder praktikum\ncd Documents/PraktikumWeb\n\n# 2. Buat proyek React baru dengan Vite\nnpm create vite@latest praktikum-react-modul2 -- --template react\n\n# 3. Masuk ke folder, pasang paket, & jalankan server\ncd praktikum-react-modul2\nnpm install\nnpm run dev`,
+                  copyId: 's11_vite'
+                })}
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 12: LANGKAH 1B - MENYIAPKAN GAYA TAMPILAN (src/App.css)
+        // =====================================================================
+        case 11: {
+          const cssCompact = `/* src/App.css (Klik Copy Kode untuk menyalin seluruh class) */\n.wadah { max-width: 640px; margin: 40px auto; padding: 0 20px; font-family: Arial, sans-serif; }\n.kartu { background: #FFF; border: 1px solid #D0D7DE; border-radius: 10px; padding: 20px; margin-bottom: 20px; }\n.baris { display: flex; gap: 8px; }\n.input { flex: 1; padding: 10px; border: 1px solid #D0D7DE; border-radius: 6px; }\n.tombol { padding: 10px 16px; border-radius: 6px; background: #1B365D; color: #FFF; font-weight: bold; }\n.tombol:disabled { background: #9CA3AF; cursor: not-allowed; }\n.tombol-merah { background: #DC2626; }\n.item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #E5E7EB; }\n.selesai { text-decoration: line-through; color: #9CA3AF; }\n.galat { color: #DC2626; font-size: 13px; margin: 6px 0 0; }`;
+          return `
+            ${renderSlideHeader(meta, '1) Kosongkan isi src/index.css lalu simpan. 2) Ganti isi src/App.css dengan kumpulan class di bawah ini.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-7">
+                ${renderCodeWindow({
+                  filename: 'src/App.css',
+                  code: cssCompact,
+                  copyId: 's12_css_full'
+                })}
+              </div>
+
+              <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <h3 class="text-sm font-extrabold text-slate-900">Preview Visual Class CSS:</h3>
+                <div class="modul2-kartu !mb-0 space-y-2.5">
+                  <h2>.kartu &amp; .judul</h2>
+                  <div class="modul2-baris">
+                    <button type="button" class="modul2-tombol">.tombol</button>
+                    <button type="button" class="modul2-tombol" disabled>:disabled</button>
+                    <button type="button" class="modul2-tombol modul2-tombol-merah modul2-tombol-kecil">.tombol-merah</button>
+                  </div>
+                  <div class="modul2-item">
+                    <input id="chkS12CssDemo" type="checkbox" ${AppState.s12CssDemoSelesai ? 'checked' : ''} class="cursor-pointer" />
+                    <span class="${AppState.s12CssDemoSelesai ? 'modul2-selesai' : ''}">Centang untuk uji class <b>.selesai</b></span>
+                  </div>
+                  <p class="modul2-galat">.galat — Pesan peringatan warna merah</p>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 13: LANGKAH 2 - KOMPONEN PEMBUNGKUS KARTU.JSX
+        // =====================================================================
+        case 12:
+          return `
+            ${renderSlideHeader(meta, 'Komponen Kartu adalah bingkai foto: judul dikirim lewat props judul, sedangkan isinya lewat props children.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6">
+                ${renderCodeWindow({
+                  filename: 'src/Kartu.jsx',
+                  code: `// src/Kartu.jsx\nfunction Kartu({ judul, children }) {\n  return (\n    <section className="kartu">\n      <h2>{judul}</h2>\n      {children}\n    </section>\n  );\n}\n\nexport default Kartu;`,
+                  copyId: 's13_kartu'
+                })}
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-sm text-slate-900">Ubah &amp; Jalankan <code class="font-mono-code text-emerald-700">&lt;Kartu&gt;</code></span>
+                  <button id="btnS13Run" type="button" class="px-3.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">▶ Jalankan</button>
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-2xl font-mono-code text-xs text-white">
+                  <div class="flex items-center gap-2">
+                    <span class="text-pink-400 font-bold">&lt;Kartu</span>
+                    <span class="text-emerald-300">judul=</span>
+                    <input id="inputS13Judul" type="text" value="${escapeHtml(AppState.s13Judul)}" class="flex-1 px-2 py-1 rounded bg-slate-800 text-amber-300 border border-slate-700" />
+                    <span class="text-pink-400 font-bold">&gt;</span>
+                  </div>
+                  <textarea id="inputS13Children" rows="2" class="w-full p-2 rounded bg-slate-950 text-slate-100 border border-slate-800">${escapeHtml(AppState.s13Isi)}</textarea>
+                  <div class="text-pink-400 font-bold">&lt;/Kartu&gt;</div>
+                </div>
+                <div class="modul2-wadah bg-slate-50 rounded-2xl border border-slate-200">
+                  <section class="modul2-kartu !mb-0">
+                    <h2>${escapeHtml(AppState.s13Judul)}</h2>
+                    <div class="text-xs sm:text-sm text-slate-700">${AppState.s13Isi}</div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 14: LANGKAH 3A - PENGHITUNG VERSI KELIRU
+        // =====================================================================
+        case 13:
+          return `
+            ${renderSlideHeader(meta, 'Bukti Eksperimen: Angka di Console F12 bertambah, tetapi angka di layar tetap 0 karena memakai variabel let biasa.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6">
+                ${renderCodeWindow({
+                  filename: 'src/Penghitung.jsx (VERSI KELIRU)',
+                  code: `import Kartu from '${"."}/Kartu';\n\nfunction Penghitung() {\n  let jumlah = 0; // variabel biasa\n  const tambah = () => {\n    jumlah = jumlah + 1;\n    console.log('Nilai jumlah sekarang:', jumlah);\n  };\n  return (\n    <Kartu judul="Penghitung Klik">\n      <p>Tombol sudah diklik {jumlah} kali</p>\n      <button className="tombol" onClick={tambah}>Klik Saya</button>\n    </Kartu>\n  );\n}\nexport default Penghitung;`,
+                  copyId: 's14_wrong'
+                })}
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="modul2-wadah bg-slate-50 rounded-2xl border border-slate-200">
+                  <section class="modul2-kartu !mb-0">
+                    <h2>Penghitung Klik</h2>
+                    <p class="text-sm mb-2.5">Tombol sudah diklik <strong class="text-rose-600 text-lg">0</strong> kali</p>
+                    <button id="btnS14ClickWrong" type="button" class="modul2-tombol">Klik Saya</button>
+                  </section>
+                </div>
+
+                <div class="rounded-2xl bg-slate-950 text-slate-100 p-3.5 font-mono-code text-xs space-y-1.5 border border-slate-800">
+                  <div class="flex items-center justify-between text-amber-300 font-bold border-b border-slate-800 pb-1">
+                    <span>🔧 DevTools (F12) — Tab Console</span>
+                    <button id="btnS14ClearConsole" type="button" class="text-slate-400 hover:text-white">Bersihkan</button>
+                  </div>
+                  <div class="space-y-1">
+                    ${AppState.s14ConsoleLogs.length === 0
+                      ? `<div class="text-slate-400 italic">// Klik tombol "Klik Saya" beberapa kali...</div>`
+                      : AppState.s14ConsoleLogs.slice(-3).map((l) => `<div class="text-emerald-300">&gt; ${escapeHtml(l)}</div>`).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 15: LANGKAH 3B - PENGHITUNG VERSI BENAR (useState)
+        // =====================================================================
+        case 14:
+          return `
+            ${renderSlideHeader(meta, 'Kita perbaiki menggunakan useState(0). Klik sampai 5 kali untuk memunculkan pesan tambahan!')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6">
+                ${renderCodeWindow({
+                  filename: 'src/Penghitung.jsx (VERSI BENAR)',
+                  code: `import { useState } from 'react';\nimport Kartu from '${"."}/Kartu';\n\nfunction Penghitung() {\n  const [jumlah, setJumlah] = useState(0);\n  const tambah = () => setJumlah(jumlah + 1);\n  const ulangi = () => setJumlah(0);\n\n  return (\n    <Kartu judul="Penghitung Klik">\n      <p>Tombol sudah diklik {jumlah} kali</p>\n      {jumlah >= ${AppState.s15TargetKlik} && <p>${AppState.s15Pesan}</p>}\n      <div className="baris">\n        <button className="tombol" onClick={tambah}>Klik Saya</button>\n        <button className="tombol tombol-merah" onClick={ulangi}>Ulangi</button>\n      </div>\n    </Kartu>\n  );\n}`,
+                  copyId: 's15_right'
+                })}
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="modul2-wadah bg-slate-50 rounded-2xl border border-slate-200">
+                  <section class="modul2-kartu !mb-0">
+                    <h2>Penghitung Klik</h2>
+                    <p class="text-sm mb-2">Tombol sudah diklik <strong class="text-emerald-700 text-lg">${AppState.s15Count}</strong> kali</p>
+                    ${AppState.s15Count >= AppState.s15TargetKlik ? `<p class="text-xs font-bold text-emerald-900 bg-emerald-50 p-2 rounded-lg border border-emerald-300 mb-2.5">${escapeHtml(AppState.s15Pesan)}</p>` : ''}
+                    <div class="modul2-baris">
+                      <button id="btnS15Tambah" type="button" class="modul2-tombol">Klik Saya</button>
+                      <button id="btnS15Ulangi" type="button" class="modul2-tombol modul2-tombol-merah">Ulangi</button>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-slate-900 text-white flex flex-wrap items-center gap-2">
+                  <span class="text-xs font-mono-code text-slate-200">Syarat <code class="text-emerald-300">jumlah &gt;=</code></span>
+                  <input id="inputS15Target" type="number" min="1" max="20" value="${AppState.s15TargetKlik}" class="w-14 px-2 py-1 rounded bg-slate-800 text-amber-300 font-mono-code text-xs border border-slate-700" />
+                  <input id="inputS15Pesan" type="text" value="${escapeHtml(AppState.s15Pesan)}" class="flex-1 px-2.5 py-1 rounded bg-slate-800 text-emerald-300 font-mono-code text-xs border border-slate-700" />
+                  <button id="btnS15ApplyCode" type="button" class="px-3 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold">▶ Run</button>
+                </div>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 16: LANGKAH 4 - FORMTUGAS.JSX
+        // =====================================================================
+        case 15: {
+          const terlaluPanjang = AppState.s16Teks.length > 50;
+          const tidakValid = AppState.s16Teks.trim() === '' || terlaluPanjang;
+          return `
+            ${renderSlideHeader(meta, 'FormTugas menampung ketikan di state teks, mengecek batas <= 50 karakter, lalu melapor ke App lewat onTambah.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-7">
+                ${renderCodeWindow({
+                  filename: 'src/FormTugas.jsx',
+                  code: `import { useState } from 'react';\n\nfunction FormTugas({ onTambah }) {\n  const [teks, setTeks] = useState('');\n  const terlaluPanjang = teks.length > 50;\n  const tidakValid = teks.trim() === '' || terlaluPanjang;\n\n  const tanganiKirim = (event) => {\n    event.preventDefault(); // cegah halaman reload\n    if (tidakValid) return;\n    onTambah(teks.trim()); // lapor ke induk (App)\n    setTeks(''); // kosongkan kotak input\n  };\n  return (\n    <form onSubmit={tanganiKirim}>\n      <input className="input" value={teks} onChange={(e) => setTeks(e.target.value)} />\n      <button className="tombol" disabled={tidakValid}>Tambah</button>\n      {terlaluPanjang && <p className="galat">Judul maksimal 50 karakter.</p>}\n    </form>\n  );\n}`,
+                  copyId: 's16_form'
+                })}
+              </div>
+
+              <div class="lg:col-span-5 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="modul2-wadah bg-slate-50 rounded-2xl border border-slate-200">
+                  <section class="modul2-kartu !mb-0">
+                    <h2>Tambah Tugas Baru</h2>
+                    <form id="formS16Live">
+                      <div class="modul2-baris">
+                        <input id="inputS16Teks" type="text" class="modul2-input" placeholder="Ketik tugas..." value="${escapeHtml(AppState.s16Teks)}" />
+                        <button id="btnS16Submit" type="submit" class="modul2-tombol" ${tidakValid ? 'disabled' : ''}>Tambah</button>
+                      </div>
+                      <p id="s16ErrorText" class="modul2-galat ${terlaluPanjang ? '' : 'hidden'}">Judul tugas maksimal 50 karakter.</p>
+                    </form>
+                  </section>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-slate-900 text-slate-100 font-mono-code text-xs space-y-1">
+                  <div class="text-emerald-400 font-bold">📞 Laporan onTambah() Diterima Induk:</div>
+                  ${AppState.s16ParentLogs.slice(0, 2).map((l) => `<div>✓ ${escapeHtml(l)}</div>`).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 17: LANGKAH 5 - ITEMTUGAS.JSX
+        // =====================================================================
+        case 16:
+          return `
+            ${renderSlideHeader(meta, 'Penting: Bungkus onHapus(tugas.id) dengan tanda panah () => agar tidak langsung terhapus saat halaman dibuka!')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6">
+                ${renderCodeWindow({
+                  filename: 'src/ItemTugas.jsx',
+                  code: `function ItemTugas({ tugas, onUbahStatus, onHapus }) {\n  return (\n    <li className="item">\n      <input\n        type="checkbox"\n        checked={tugas.selesai}\n        onChange={() => onUbahStatus(tugas.id)}\n      />\n      <span className={tugas.selesai ? 'selesai' : ''}>\n        {tugas.judul}\n      </span>\n      <button\n        className="tombol tombol-merah tombol-kecil"\n        onClick={() => onHapus(tugas.id)}\n      >Hapus</button>\n    </li>\n  );\n}`,
+                  copyId: 's17_item'
+                })}
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-sm text-slate-900">Uji Coba Komponen ItemTugas</span>
+                  <button id="btnS17Reset" type="button" class="px-2.5 py-1 rounded-lg bg-slate-100 text-xs font-bold text-slate-800">Reset</button>
+                </div>
+                <div class="modul2-wadah bg-slate-50 rounded-2xl border border-slate-200">
+                  <section class="modul2-kartu !mb-0">
+                    ${AppState.s17Items.length === 0
+                      ? `<p class="modul2-kosong">${AppState.s17BugSimulated ? '💥 Semua tugas langsung lenyap saat dibuka karena lupa menulis () => !' : 'Semua tugas telah dihapus.'}</p>`
+                      : `<ul class="modul2-daftar">
+                          ${AppState.s17Items.map((t) => `
+                            <li class="modul2-item">
+                              <input type="checkbox" data-s17-toggle="${t.id}" class="chk-s17-item cursor-pointer" ${t.selesai ? 'checked' : ''} />
+                              <span class="${t.selesai ? 'modul2-selesai' : ''}">${escapeHtml(t.judul)}</span>
+                              <button type="button" data-s17-del="${t.id}" class="btn-s17-del modul2-tombol modul2-tombol-merah modul2-tombol-kecil">Hapus</button>
+                            </li>
+                          `).join('')}
+                        </ul>`
+                    }
+                  </section>
+                </div>
+                <button id="btnS17SimulateBug" type="button" class="w-full py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition">
+                  💥 Simulasikan Salah Menulis: onClick={onHapus(tugas.id)}
+                </button>
+              </div>
+            </div>
+          `;
+
+        // =====================================================================
+        // SLIDE 18: LANGKAH 6 - MERANGKAI DI INDUK APP.JSX & 5 SKENARIO UJI
+        // =====================================================================
+        case 17: {
+          const selesaiCount = AppState.s18Tasks.filter((t) => t.selesai).length;
+          const tooLong = AppState.s18Input.length > 50;
+          const invalid = AppState.s18Input.trim() === '' || tooLong;
+          return `
+            ${renderSlideHeader(meta, 'App.jsx menyimpan daftarTugas dan membagikan fungsi tambahTugas, ubahStatus, serta hapusTugas ke anak-anaknya.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6">
+                ${renderCodeWindow({
+                  filename: 'src/App.jsx (Langkah 6)',
+                  code: `const [daftarTugas, setDaftarTugas] = useState([...]);\n\nconst tambahTugas = (judul) => {\n  const baru = { id: Date.now(), judul, selesai: false };\n  setDaftarTugas([...daftarTugas, baru]);\n};\nconst ubahStatus = (id) => {\n  setDaftarTugas(daftarTugas.map((t) =>\n    t.id === id ? { ...t, selesai: !t.selesai } : t\n  ));\n};\nconst hapusTugas = (id) => {\n  setDaftarTugas(daftarTugas.filter((t) => t.id !== id));\n};\nconst jumlahSelesai = daftarTugas.filter((t) => t.selesai).length;`,
+                  copyId: 's18_app'
+                })}
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-4 space-y-2.5 shadow-sm">
+                <div class="flex flex-wrap gap-1.5">
+                  <button type="button" data-s18-scen="1" class="btn-s18-scen px-2 py-1 rounded-lg bg-emerald-100 text-emerald-950 text-xs font-bold">Uji 1: Tambah</button>
+                  <button type="button" data-s18-scen="2" class="btn-s18-scen px-2 py-1 rounded-lg bg-rose-100 text-rose-950 text-xs font-bold">Uji 2: &gt;50 Kar</button>
+                  <button type="button" data-s18-scen="3" class="btn-s18-scen px-2 py-1 rounded-lg bg-sky-100 text-sky-950 text-xs font-bold">Uji 3: Centang</button>
+                  <button type="button" data-s18-scen="4" class="btn-s18-scen px-2 py-1 rounded-lg bg-amber-100 text-amber-950 text-xs font-bold">Uji 4: Kosong</button>
+                  <button type="button" data-s18-scen="5" class="btn-s18-scen px-2 py-1 rounded-lg bg-slate-200 text-slate-900 text-xs font-bold">Uji 5: Reset F5</button>
+                </div>
+                <div class="modul2-wadah bg-slate-50 rounded-2xl border border-slate-200">
+                  <section class="modul2-kartu">
+                    <h2>Tambah Tugas Baru</h2>
+                    <form id="formS18App">
+                      <div class="modul2-baris">
+                        <input id="inputS18Teks" type="text" class="modul2-input" value="${escapeHtml(AppState.s18Input)}" placeholder="Ketik tugas..." />
+                        <button id="btnS18Submit" type="submit" class="modul2-tombol" ${invalid ? 'disabled' : ''}>Tambah</button>
+                      </div>
+                      <p id="s18ErrorText" class="modul2-galat ${tooLong ? '' : 'hidden'}">Judul tugas maksimal 50 karakter.</p>
+                    </form>
+                  </section>
+                  <section class="modul2-kartu !mb-0">
+                    <h2>Daftar Tugas (${selesaiCount} dari ${AppState.s18Tasks.length} selesai)</h2>
+                    ${AppState.s18Tasks.length === 0
+                      ? `<p class="modul2-kosong">Belum ada tugas. Yuk tambahkan tugas pertamamu!</p>`
+                      : `<ul class="modul2-daftar">
+                          ${AppState.s18Tasks.slice(0, 3).map((t) => `
+                            <li class="modul2-item">
+                              <input type="checkbox" data-s18-toggle="${t.id}" class="chk-s18-item" ${t.selesai ? 'checked' : ''} />
+                              <span class="${t.selesai ? 'modul2-selesai' : ''}">${escapeHtml(t.judul)}</span>
+                              <button type="button" data-s18-del="${t.id}" class="btn-s18-del modul2-tombol modul2-tombol-merah modul2-tombol-kecil">Hapus</button>
+                            </li>
+                          `).join('')}
+                        </ul>`
+                    }
+                  </section>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 19: LANGKAH 7 - SINKRONISASI JUDUL TAB & localStorage
+        // =====================================================================
+        case 18: {
+          const sisa = AppState.s18Tasks.filter((t) => !t.selesai).length;
+          return `
+            ${renderSlideHeader(meta, 'Agar data tidak hilang saat di-refresh (F5), simpan ke laci localStorage memakai JSON.stringify dan baca dengan JSON.parse.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6">
+                ${renderCodeWindow({
+                  filename: 'src/App.jsx (Langkah 7a, 7b, 7c)',
+                  code: `// 7b. Baca dari localStorage saat pertama dibuka\nconst [daftarTugas, setDaftarTugas] = useState(() => {\n  const simpan = localStorage.getItem('daftar-tugas');\n  return simpan ? JSON.parse(simpan) : dataAwal;\n});\n// Efek B: Ubah judul tab browser\nuseEffect(() => {\n  const sisa = daftarTugas.filter((t) => !t.selesai).length;\n  document.title = \`(\${sisa}) Tugas Belum Selesai\`;\n}, [daftarTugas]);\n// Efek C: Simpan ke localStorage\nuseEffect(() => {\n  localStorage.setItem('daftar-tugas', JSON.stringify(daftarTugas));\n}, [daftarTugas]);`,
+                  copyId: 's19_effect'
+                })}
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="p-3 rounded-2xl bg-slate-900 text-white flex items-center justify-between">
+                  <span class="font-mono-code text-xs text-emerald-300 font-bold">🌐 Judul Tab: (${sisa}) Tugas Belum Selesai</span>
+                  <div class="flex gap-1.5">
+                    <button id="btnS19QuickAdd" type="button" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold">+ Tambah</button>
+                    <button id="btnS19SimRefresh" type="button" class="px-2.5 py-1 rounded-lg bg-slate-700 text-white text-xs font-bold">🔄 Refresh F5</button>
+                  </div>
+                </div>
+
+                <div class="space-y-1.5">
+                  ${AppState.s18Tasks.slice(0, 3).map((t) => `
+                    <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm">
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" data-s18-toggle="${t.id}" class="chk-s18-item" ${t.selesai ? 'checked' : ''} />
+                        <span class="${t.selesai ? 'line-through text-slate-400' : 'font-semibold text-slate-900'}">${escapeHtml(t.judul)}</span>
+                      </label>
+                      <button type="button" data-s18-del="${t.id}" class="btn-s18-del text-rose-600 font-bold text-xs">Hapus</button>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <div class="p-3 rounded-2xl bg-slate-950 text-emerald-300 font-mono-code text-xs space-y-1 border border-slate-800">
+                  <div class="text-amber-300 font-bold">🗄️ Isi Local Storage ("daftar-tugas"):</div>
+                  <div class="truncate">${escapeHtml(JSON.stringify(AppState.s18Tasks))}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 20: LANGKAH 8 - MATRIKS TROUBLESHOOTING (10 GALAT POPULER)
+        // =====================================================================
+        case 19: {
+          const faqs = [
+            { err: '1. Angka di Console naik, tapi layar tetap 0', cause: 'Masih memakai variabel biasa (let), bukan useState.', fix: 'Ganti dengan const [nilai, setNilai] = useState(0)' },
+            { err: '2. Error: useState is not defined', cause: 'Lupa mengimpor useState di baris paling atas.', fix: "import { useState } from 'react';" },
+            { err: '3. Error: Too many re-renders', cause: 'Memanggil fungsi langsung dengan kurung: onClick={tambah()}', fix: 'Hapus kurungnya menjadi: onClick={tambah}' },
+            { err: '4. Semua tugas langsung hilang saat dibuka', cause: 'Menulis onClick={onHapus(tugas.id)} tanpa tanda panah.', fix: 'Bungkus dengan arrow function: () => onHapus(tugas.id)' },
+            { err: '5. Halaman berkedip reload saat tekan Enter', cause: 'Sifat bawaan form HTML memang me-reload halaman.', fix: 'Tambahkan event.preventDefault(); di baris pertama onSubmit' },
+            { err: '6. Kotak input terkunci / tidak bisa diketik', cause: 'Memasang value={teks} tapi lupa memasang onChange.', fix: 'Tambahkan onChange={(e) => setTeks(e.target.value)}' },
+            { err: '7. Sudah .push(), tapi daftar tidak bertambah', cause: 'Mengubah array lama secara langsung (mutasi).', fix: 'Buat array baru: setDaftar([...daftar, itemBaru])' },
+            { err: '8. Error: Invalid hook call', cause: 'Menaruh useState di dalam if, loop, atau fungsi biasa.', fix: 'Pindahkan semua useState ke baris paling atas komponen' },
+            { err: '9. console.log muncul dua kali di Console', cause: 'Fitur <React.StrictMode> sengaja mengetes 2x saat dev.', fix: 'Normal (bukan error)! Saat produksi hanya jalan 1x' },
+            { err: '10. Error: Unexpected token is not valid JSON', cause: 'Isi localStorage rusak / bukan teks JSON yang sah.', fix: 'Buka F12 → Application → Local Storage → Klik kanan Delete' }
+          ];
+          const cur = faqs[AppState.s20SelectedFAQ];
+          return `
+            ${renderSlideHeader(meta, 'Klik gejala error di sebelah kiri untuk melihat penyebab dan cara memperbaikinya.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6 grid grid-cols-2 gap-2">
+                ${faqs.map((item, idx) => `
+                  <button type="button" data-s20-faq="${idx}" class="btn-s20-faq text-left p-2.5 rounded-xl border text-xs font-bold transition truncate ${AppState.s20SelectedFAQ === idx ? 'bg-slate-900 text-emerald-300 border-slate-900 shadow-xs' : 'bg-white text-slate-800 border-slate-200'}">
+                    ${escapeHtml(item.err)}
+                  </button>
+                `).join('')}
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="p-3.5 rounded-2xl bg-rose-50 border border-rose-200">
+                  <div class="text-xs font-mono-code font-bold text-rose-700">GEJALA / PESAN ERROR:</div>
+                  <div class="text-base font-extrabold text-rose-950 mt-0.5">${escapeHtml(cur.err)}</div>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
+                  <div class="text-xs font-mono-code font-bold text-amber-900">KENAPA BISA BEGITU?</div>
+                  <div class="text-sm font-bold text-slate-900 mt-0.5">${escapeHtml(cur.cause)}</div>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-slate-900 border-2 border-emerald-400">
+                  <div class="text-xs font-mono-code font-bold text-emerald-400">CARA MEMPERBAIKINYA:</div>
+                  <div class="text-sm font-extrabold text-white font-mono-code mt-0.5">${escapeHtml(cur.fix)}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 21: LATIHAN MANDIRI (TUGAS 1 & TUGAS 2 DI KELAS)
+        // =====================================================================
+        case 20: {
+          const filtered = AppState.s21Tasks.filter((t) => {
+            if (AppState.s21Filter === 'belum') return !t.selesai;
+            if (AppState.s21Filter === 'selesai') return t.selesai;
+            return true;
+          });
+          const adaYangSelesai = AppState.s21Tasks.some((t) => t.selesai);
+          return `
+            ${renderSlideHeader(meta, 'Diselesaikan di sesi praktikum dengan menambahkan 2 fitur baru ke aplikasi "Daftar Tugas Praktikum".')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6 space-y-3">
+                <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-1.5 shadow-2xs">
+                  <span class="px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-900 text-xs font-bold">TUGAS 1 • Filter 3 Tombol</span>
+                  <h3 class="text-base font-extrabold text-slate-900">Tombol: Semua, Belum Selesai, Selesai</h3>
+                  <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                    Simpan di <code class="font-mono-code bg-slate-100 text-slate-900 px-1.5 py-0.5 rounded font-bold">const [filter, setFilter] = useState('semua')</code>, saring dengan <code class="font-mono-code bg-slate-100 text-slate-900 px-1.5 py-0.5 rounded font-bold">.filter()</code> sebelum <code class="font-mono-code bg-slate-100 text-slate-900 px-1.5 py-0.5 rounded font-bold">.map()</code>, dan bedakan warna tombol aktif.
+                  </p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white border border-slate-200 space-y-1.5 shadow-2xs">
+                  <span class="px-2.5 py-0.5 rounded bg-sky-100 text-sky-900 text-xs font-bold">TUGAS 2 • Conditional Rendering (&amp;&amp;)</span>
+                  <h3 class="text-base font-extrabold text-slate-900">Tombol "Hapus Semua yang Selesai"</h3>
+                  <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                    Hanya muncul jika ada minimal 1 tugas yang berstatus selesai (<code class="font-mono-code bg-slate-100 text-slate-900 px-1.5 py-0.5 rounded font-bold">&amp;&amp;</code>). Saat diklik, hapus semua tugas selesai.
+                  </p>
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex gap-1.5">
+                    ${[
+                      { id: 'semua', label: 'Semua' },
+                      { id: 'belum', label: 'Belum Selesai' },
+                      { id: 'selesai', label: 'Selesai' }
+                    ].map((f) => `
+                      <button type="button" data-s21-filter="${f.id}" class="btn-s21-filter px-3 py-1 rounded-lg text-xs font-bold transition ${AppState.s21Filter === f.id ? 'bg-[#1B365D] text-white shadow-xs' : 'bg-slate-100 text-slate-800'}">${f.label}</button>
+                    `).join('')}
+                  </div>
+                  <button id="btnS21Reset" type="button" class="text-xs font-bold text-slate-600 hover:text-slate-900">Reset Contoh</button>
+                </div>
+
+                <ul class="modul2-daftar">
+                  ${filtered.map((t) => `
+                    <li class="modul2-item">
+                      <input type="checkbox" data-s21-toggle="${t.id}" class="chk-s21-item cursor-pointer" ${t.selesai ? 'checked' : ''} />
+                      <span class="${t.selesai ? 'modul2-selesai' : ''}">${escapeHtml(t.judul)}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+
+                ${adaYangSelesai
+                  ? `<button id="btnS21ClearCompleted" type="button" class="w-full py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition">
+                      🗑️ Hapus Semua yang Selesai
+                    </button>`
+                  : `<div class="p-2 rounded-xl bg-slate-100 text-center text-xs text-slate-500 italic">Tombol bersembunyi karena belum ada tugas selesai.</div>`
+                }
+              </div>
+            </div>
+          `;
+        }
+
+        // =====================================================================
+        // SLIDE 22: TUGAS 3 (CATATAN KEUANGAN MINI) & PETUNJUK NUMBER()
+        // =====================================================================
+        case 21: {
+          const totalSaldo = AppState.s22Transaksi.reduce((acc, item) => {
+            const val = AppState.s22UseNumberConvert ? Number(item.nominal) : String(item.nominal);
+            return item.jenis === 'pemasukan'
+              ? (AppState.s22UseNumberConvert ? acc + val : String(acc) + val)
+              : (AppState.s22UseNumberConvert ? acc - Number(item.nominal) : String(acc) + '-' + val);
+          }, AppState.s22UseNumberConvert ? 0 : '');
+
+          return `
+            ${renderSlideHeader(meta, 'Tugas Laporan Mandiri (Dikumpulkan H-1 Sesi Berikutnya): Minimal 3 komponen terpisah & tersimpan di localStorage.')}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+              <div class="lg:col-span-6 space-y-3">
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-1.5 text-xs sm:text-sm text-slate-700">
+                  <div class="font-extrabold text-sm sm:text-base text-slate-900">6 Spesifikasi Aplikasi:</div>
+                  <div><strong>(a)</strong> Form terkendali: Keterangan, Nominal, &amp; Jenis (Pemasukan/Pengeluaran).</div>
+                  <div><strong>(b)</strong> Daftar transaksi lengkap dengan tombol hapus.</div>
+                  <div><strong>(c)</strong> Total saldo otomatis dihitung dari state.</div>
+                  <div><strong>(d)</strong> Pemasukan warna <strong class="text-emerald-700">hijau</strong>, Pengeluaran warna <strong class="text-rose-600">merah</strong>.</div>
+                  <div><strong>(e)</strong> Pesan khusus jika belum ada transaksi &amp; <strong>(f)</strong> Simpan ke <code class="font-mono-code font-bold text-slate-900">localStorage</code>.</div>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="font-extrabold text-xs sm:text-sm text-amber-950">⚠️ Petunjuk Penting: Number(nominal)</span>
+                    <button id="btnS22ToggleNumberBug" type="button" class="px-2.5 py-1 rounded-lg text-xs font-mono-code font-bold ${AppState.s22UseNumberConvert ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'}">
+                      ${AppState.s22UseNumberConvert ? '✅ Pakai Number(nominal)' : '❌ Lupa Number()'}
+                    </button>
+                  </div>
+                  <p class="text-xs text-amber-950 leading-relaxed">
+                    Ubah input teks menjadi angka dengan <code class="font-mono-code bg-white text-slate-900 px-1.5 py-0.5 rounded font-bold">Number(nominal)</code> agar <code class="font-mono-code font-bold">"5000" + "2000"</code> menjadi <code class="font-mono-code font-bold text-emerald-800">7000</code>, bukan <code class="font-mono-code font-bold text-rose-700">"50002000"</code>!
+                  </p>
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 bg-white rounded-3xl border border-slate-200 p-5 space-y-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-sm sm:text-base text-slate-900">Contoh Jadi: Catatan Keuangan Mini</span>
+                  <span class="px-3 py-1 rounded-xl font-mono-code text-xs sm:text-sm font-black ${AppState.s22UseNumberConvert ? 'bg-emerald-100 text-emerald-950' : 'bg-rose-100 text-rose-950'}">
+                    Saldo: Rp ${AppState.s22UseNumberConvert ? Number(totalSaldo).toLocaleString('id-ID') : totalSaldo}
+                  </span>
+                </div>
+                <form id="formS22Keuangan" class="grid grid-cols-12 gap-2">
+                  <input id="inputS22Ket" type="text" placeholder="Keterangan" class="col-span-5 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs text-slate-900" />
+                  <input id="inputS22Nom" type="number" placeholder="Nominal" class="col-span-3 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs text-slate-900" />
+                  <select id="selectS22Jenis" class="col-span-2 px-1.5 py-1.5 rounded-xl border border-slate-300 text-xs bg-white text-slate-900">
+                    <option value="pemasukan">+ Masuk</option>
+                    <option value="pengeluaran">- Keluar</option>
+                  </select>
+                  <button type="submit" class="col-span-2 py-1.5 rounded-xl bg-[#1B365D] text-white text-xs font-bold">Simpan</button>
+                </form>
+                <div class="space-y-1.5">
+                  ${AppState.s22Transaksi.length === 0
+                    ? `<p class="modul2-kosong">Belum ada transaksi keuangan.</p>`
+                    : AppState.s22Transaksi.slice(0, 3).map((tr) => `
+                        <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm">
+                          <span class="font-bold text-slate-900">${escapeHtml(tr.ket)}</span>
+                          <div class="flex items-center gap-2.5">
+                            <span class="font-mono-code font-bold ${tr.jenis === 'pemasukan' ? 'text-emerald-600' : 'text-rose-600'}">
+                              ${tr.jenis === 'pemasukan' ? '+' : '-'} Rp ${Number(tr.nominal).toLocaleString('id-ID')}
+                            </span>
+                            <button type="button" data-s22-del="${tr.id}" class="btn-s22-del text-rose-600 font-bold text-xs">Hapus</button>
+                          </div>
+                        </div>
+                      `).join('')
+                  }
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function renderCurrentSlide(animate = true) {
+      const idx = AppState.currentSlide;
+      const meta = SLIDES_META[idx];
+      const viewport = document.getElementById('slideViewport');
+      if (!viewport) return;
+
+      if (animate) {
+        viewport.classList.remove('slide-anim-right', 'slide-anim-left');
+        void viewport.offsetWidth;
+        viewport.classList.add(AppState.direction === 'left' ? 'slide-anim-left' : 'slide-anim-right');
+      }
+
+      viewport.innerHTML = buildSlideHTML(idx);
+
+      const corner = document.getElementById('slideCornerIndicator');
+      if (corner) corner.textContent = `${meta.no} / ${SLIDES_META.length}`;
+
+      const prog = document.getElementById('topProgressBar');
+      if (prog) prog.style.width = `${((idx + 1) / SLIDES_META.length) * 100}%`;
+
+      attachSlideEvents();
+    }
+
+    function goToSlide(targetIdx) {
+      if (targetIdx < 0 || targetIdx >= SLIDES_META.length) return;
+      AppState.direction = targetIdx < AppState.currentSlide ? 'left' : 'right';
+      AppState.currentSlide = targetIdx;
+      renderCurrentSlide(true);
+    }
+
+    function attachSlideEvents() {
+      document.querySelectorAll('.btn-copy-code').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-copy-id');
+          copyTextToClipboard((window.__copySnippets && window.__copySnippets[id]) || '');
+        });
+      });
+
+      // Slide 01 Interactive Hero
+      document.querySelectorAll('.btn-s1-mode').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          AppState.s1Mode = btn.getAttribute('data-s1-mode');
+          AppState.s1StaticNotice = '';
+          renderCurrentSlide(false);
+        });
+      });
+      const btnS1Like = document.getElementById('btnS1Like');
+      if (btnS1Like) {
+        btnS1Like.addEventListener('click', () => {
+          if (AppState.s1Mode === 'modul1') {
+            AppState.s1StaticNotice = 'Tombol ❤️ diklik, tapi tidak berubah karena di Modul 1 belum ada useState!';
+          } else {
+            AppState.s1Likes += 1;
+          }
+          renderCurrentSlide(false);
+        });
+      }
+      const inputS1Name = document.getElementById('inputS1Name');
+      if (inputS1Name) {
+        inputS1Name.addEventListener('input', (e) => {
+          if (AppState.s1Mode !== 'modul2') return;
+          AppState.s1StudentName = e.target.value;
+          const pos = e.target.selectionStart;
+          renderCurrentSlide(false);
+          const el = document.getElementById('inputS1Name');
+          if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch (err) {} }
+        });
+      }
+      const btnS1Click = document.getElementById('btnS1Click');
+      if (btnS1Click) {
+        btnS1Click.addEventListener('click', () => {
+          if (AppState.s1Mode === 'modul1') {
+            AppState.s1StaticNotice = 'Tombol "+ Tambah Klik" ditekan, tapi angka tetap membeku karena belum memakai State!';
+          } else {
+            AppState.s1Clicks += 1;
+          }
+          renderCurrentSlide(false);
+        });
+      }
+      const btnS1Reset = document.getElementById('btnS1Reset');
+      if (btnS1Reset) {
+        btnS1Reset.addEventListener('click', () => {
+          AppState.s1Clicks = 0;
+          AppState.s1Likes = 12;
+          AppState.s1StudentName = 'Mahasiswa Baru UNPAS';
+          AppState.s1StaticNotice = '';
+          renderCurrentSlide(false);
+        });
+      }
+
+      // Slide 02 Props vs State
+      const btnS3Props = document.getElementById('btnS3TryMutateProps');
+      if (btnS3Props) btnS3Props.addEventListener('click', () => {
+        AppState.s3Status = '❌ Ditolak oleh React! Props bersifat Read-Only, komponen anak tidak boleh mengubah titipan induk.';
+        renderCurrentSlide(false);
+      });
+      const btnS3State = document.getElementById('btnS3UpdateState');
+      if (btnS3State) btnS3State.addEventListener('click', () => {
+        AppState.s3StateCount += 5000;
+        AppState.s3Status = `✅ Berhasil! State berubah jadi Rp ${AppState.s3StateCount.toLocaleString('id-ID')} dan layar langsung digambar ulang!`;
+        renderCurrentSlide(false);
+      });
+
+      // Slide 03 let vs useState
+      const btnS4Let = document.getElementById('btnS4ClickLet');
+      if (btnS4Let) btnS4Let.addEventListener('click', () => { AppState.s4LetMem += 1; renderCurrentSlide(false); });
+      const btnS4State = document.getElementById('btnS4ClickState');
+      if (btnS4State) btnS4State.addEventListener('click', () => { AppState.s4StateVal += 1; renderCurrentSlide(false); });
+      const btnS4Reset = document.getElementById('btnS4ResetBoth');
+      if (btnS4Reset) btnS4Reset.addEventListener('click', () => { AppState.s4LetMem = 0; AppState.s4StateVal = 0; renderCurrentSlide(false); });
+
+      // Slide 04 5-Step Lifecycle
+      const btnS5Next = document.getElementById('btnS5NextStep');
+      if (btnS5Next) btnS5Next.addEventListener('click', () => {
+        AppState.s5Step = AppState.s5Step < 5 ? AppState.s5Step + 1 : 1;
+        if (AppState.s5Step === 4) AppState.s5Count += 1;
+        renderCurrentSlide(false);
+      });
+
+      // Slide 05 Event Handling
+      const chkS6 = document.getElementById('chkS6PreventDefault');
+      if (chkS6) chkS6.addEventListener('change', (e) => { AppState.s6PreventDefaultOn = e.target.checked; });
+      const inputS6 = document.getElementById('inputS6Text');
+      if (inputS6) inputS6.addEventListener('input', (e) => {
+        AppState.s6Text = e.target.value;
+        const b = document.getElementById('s6LiveValueBadge');
+        if (b) b.textContent = `"${AppState.s6Text}"`;
+      });
+      const formS6 = document.getElementById('formS6Demo');
+      if (formS6) formS6.addEventListener('submit', (e) => {
+        e.preventDefault();
+        AppState.s6SubmittedMsg = AppState.s6PreventDefaultOn
+          ? `✅ preventDefault() aktif: Form terkirim ("${AppState.s6Text}") tanpa reload halaman!`
+          : '⚠️ Tanpa preventDefault(): Halaman berkedip reload dan semua data state hilang!';
+        if (!AppState.s6PreventDefaultOn) AppState.s6Text = '';
+        renderCurrentSlide(false);
+      });
+
+      // Slide 06 Immutable Update
+      document.querySelectorAll('.btn-s7-tab').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          AppState.s7Tab = parseInt(btn.getAttribute('data-s7-tab'), 10);
+          renderCurrentSlide(false);
+        });
+      });
+      const btnS7Add = document.getElementById('btnS7SpreadAdd');
+      if (btnS7Add) btnS7Add.addEventListener('click', () => {
+        const id = AppState.s7Items.length + 1;
+        AppState.s7Items = [...AppState.s7Items, { id, judul: `Tugas Praktikum #${id}`, selesai: false }];
+        AppState.s7Log = '✅ Spread [...daftar, baru] membuat foto/array baru!';
+        renderCurrentSlide(false);
+      });
+      const btnS7Toggle = document.getElementById('btnS7MapToggle');
+      if (btnS7Toggle) btnS7Toggle.addEventListener('click', () => {
+        AppState.s7Items = AppState.s7Items.map((it, i) => i === 0 ? { ...it, selesai: !it.selesai } : it);
+        AppState.s7Log = '✅ .map() membuat salinan objek { ...tugas, selesai: !tugas.selesai }!';
+        renderCurrentSlide(false);
+      });
+      const btnS7Del = document.getElementById('btnS7FilterDel');
+      if (btnS7Del) btnS7Del.addEventListener('click', () => {
+        if (AppState.s7Items.length > 0) AppState.s7Items = AppState.s7Items.slice(0, -1);
+        AppState.s7Log = '✅ .filter() menghasilkan array baru tanpa item terakhir!';
+        renderCurrentSlide(false);
+      });
+      const btnS7Reset = document.getElementById('btnS7Reset');
+      if (btnS7Reset) btnS7Reset.addEventListener('click', () => {
+        AppState.s7Items = [
+          { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+          { id: 2, judul: 'Pelajari useState', selesai: false }
+        ];
+        renderCurrentSlide(false);
+      });
+
+      // Slide 07 Controlled Form
+      const inputS8 = document.getElementById('inputS8Teks');
+      if (inputS8) inputS8.addEventListener('input', (e) => {
+        AppState.s8Input = e.target.value;
+        const pos = e.target.selectionStart;
+        renderCurrentSlide(false);
+        const el = document.getElementById('inputS8Teks');
+        if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch (err) {} }
+      });
+      document.querySelectorAll('.btn-s8-preset').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const p = btn.getAttribute('data-s8-preset');
+          AppState.s8Input = p === 'ok' ? 'Kerjakan laporan Modul 2' : p === 'long' ? 'Judul tugas ini sengaja dibuat sangat panjang sekali hingga melewati batas maksimal lima puluh karakter' : '';
+          renderCurrentSlide(false);
+        });
+      });
+
+      // Slide 08 Conditional Rendering
+      const btnS9Err = document.getElementById('btnS9ToggleError');
+      if (btnS9Err) btnS9Err.addEventListener('click', () => { AppState.s9IsError = !AppState.s9IsError; renderCurrentSlide(false); });
+      const btnS9Sel = document.getElementById('btnS9ToggleSelesai');
+      if (btnS9Sel) btnS9Sel.addEventListener('click', () => { AppState.s9Selesai = !AppState.s9Selesai; renderCurrentSlide(false); });
+
+      // Slide 09 Lifting State Up
+      const btnS10Add = document.getElementById('btnS10SimAdd');
+      if (btnS10Add) btnS10Add.addEventListener('click', () => {
+        AppState.s10TasksCount += 1;
+        AppState.s10LastSignal = 'Anak (FormTugas) menelepon onTambah(judul) → State di Induk (App) bertambah!';
+        renderCurrentSlide(false);
+      });
+      const btnS10Del = document.getElementById('btnS10SimDel');
+      if (btnS10Del) btnS10Del.addEventListener('click', () => {
+        AppState.s10TasksCount = Math.max(0, AppState.s10TasksCount - 1);
+        AppState.s10LastSignal = 'Anak (ItemTugas) menelepon onHapus(id) → State di Induk (App) berkurang!';
+        renderCurrentSlide(false);
+      });
+
+      // Slide 10 useEffect Dependency
+      document.querySelectorAll('.btn-s11-mode').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          AppState.s11DepMode = btn.getAttribute('data-s11-mode');
+          AppState.s11Renders = 1;
+          AppState.s11EffectRuns = 1;
+          renderCurrentSlide(false);
+        });
+      });
+      const btnS11Other = document.getElementById('btnS11OtherRender');
+      if (btnS11Other) btnS11Other.addEventListener('click', () => {
+        AppState.s11Renders += 1;
+        if (AppState.s11DepMode === 'none') AppState.s11EffectRuns += 1;
+        renderCurrentSlide(false);
+      });
+      const btnS11Change = document.getElementById('btnS11ChangeTugas');
+      if (btnS11Change) btnS11Change.addEventListener('click', () => {
+        AppState.s11Renders += 1;
+        if (AppState.s11DepMode !== 'empty') AppState.s11EffectRuns += 1;
+        renderCurrentSlide(false);
+      });
+
+      // Slide 11 File Explorer
+      document.querySelectorAll('.btn-s12-file').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          AppState.s12SelectedFile = parseInt(btn.getAttribute('data-s12-file'), 10);
+          renderCurrentSlide(false);
+        });
+      });
+
+      // Slide 12 CSS Demo Checkbox
+      const chkS12Css = document.getElementById('chkS12CssDemo');
+      if (chkS12Css) chkS12Css.addEventListener('change', () => {
+        AppState.s12CssDemoSelesai = !AppState.s12CssDemoSelesai;
+        renderCurrentSlide(false);
+      });
+
+      // Slide 13 Kartu.jsx Live
+      const btnS13Run = document.getElementById('btnS13Run');
+      if (btnS13Run) btnS13Run.addEventListener('click', () => {
+        const j = document.getElementById('inputS13Judul');
+        const c = document.getElementById('inputS13Children');
+        if (j) AppState.s13Judul = j.value;
+        if (c) AppState.s13Isi = c.value;
+        renderCurrentSlide(false);
+      });
+
+      // Slide 14 Penghitung Keliru
+      const btnS14Wrong = document.getElementById('btnS14ClickWrong');
+      if (btnS14Wrong) btnS14Wrong.addEventListener('click', () => {
+        AppState.s14InternalLet += 1;
+        AppState.s14ConsoleLogs.push(`Nilai jumlah sekarang: ${AppState.s14InternalLet}`);
+        renderCurrentSlide(false);
+      });
+      const btnS14Clear = document.getElementById('btnS14ClearConsole');
+      if (btnS14Clear) btnS14Clear.addEventListener('click', () => {
+        AppState.s14InternalLet = 0;
+        AppState.s14ConsoleLogs = [];
+        renderCurrentSlide(false);
+      });
+
+      // Slide 15 Penghitung Benar
+      const btnS15Tambah = document.getElementById('btnS15Tambah');
+      if (btnS15Tambah) btnS15Tambah.addEventListener('click', () => { AppState.s15Count += 1; renderCurrentSlide(false); });
+      const btnS15Ulangi = document.getElementById('btnS15Ulangi');
+      if (btnS15Ulangi) btnS15Ulangi.addEventListener('click', () => { AppState.s15Count = 0; renderCurrentSlide(false); });
+      const btnS15Apply = document.getElementById('btnS15ApplyCode');
+      if (btnS15Apply) btnS15Apply.addEventListener('click', () => {
+        const t = document.getElementById('inputS15Target');
+        const p = document.getElementById('inputS15Pesan');
+        if (t) AppState.s15TargetKlik = Math.max(1, parseInt(t.value, 10) || 5);
+        if (p) AppState.s15Pesan = p.value || 'Wah, kamu rajin sekali mengklik!';
+        renderCurrentSlide(false);
+      });
+
+      // Slide 16 FormTugas Live
+      const inputS16 = document.getElementById('inputS16Teks');
+      if (inputS16) inputS16.addEventListener('input', (e) => {
+        AppState.s16Teks = e.target.value;
+        const tooLong = AppState.s16Teks.length > 50;
+        const invalid = AppState.s16Teks.trim() === '' || tooLong;
+        const btn = document.getElementById('btnS16Submit');
+        const err = document.getElementById('s16ErrorText');
+        if (btn) btn.disabled = invalid;
+        if (err) err.classList.toggle('hidden', !tooLong);
+      });
+      const formS16 = document.getElementById('formS16Live');
+      if (formS16) formS16.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!AppState.s16Teks.trim() || AppState.s16Teks.length > 50) return;
+        AppState.s16ParentLogs.unshift(`"${AppState.s16Teks.trim()}"`);
+        AppState.s16Teks = '';
+        renderCurrentSlide(false);
+      });
+
+      // Slide 17 ItemTugas Live
+      document.querySelectorAll('.chk-s17-item').forEach((chk) => {
+        chk.addEventListener('change', () => {
+          const id = parseInt(chk.getAttribute('data-s17-toggle'), 10);
+          AppState.s17Items = AppState.s17Items.map((it) => it.id === id ? { ...it, selesai: !it.selesai } : it);
+          renderCurrentSlide(false);
+        });
+      });
+      document.querySelectorAll('.btn-s17-del').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = parseInt(btn.getAttribute('data-s17-del'), 10);
+          AppState.s17Items = AppState.s17Items.filter((it) => it.id !== id);
+          renderCurrentSlide(false);
+        });
+      });
+      const btnS17Bug = document.getElementById('btnS17SimulateBug');
+      if (btnS17Bug) btnS17Bug.addEventListener('click', () => {
+        AppState.s17Items = [];
+        AppState.s17BugSimulated = true;
+        renderCurrentSlide(false);
+      });
+      const btnS17Reset = document.getElementById('btnS17Reset');
+      if (btnS17Reset) btnS17Reset.addEventListener('click', () => {
+        AppState.s17BugSimulated = false;
+        AppState.s17Items = [
+          { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+          { id: 2, judul: 'Pelajari useState', selesai: false }
+        ];
+        renderCurrentSlide(false);
+      });
+
+      // Slide 18 & 19 Full App
+      const inputS18 = document.getElementById('inputS18Teks');
+      if (inputS18) inputS18.addEventListener('input', (e) => {
+        AppState.s18Input = e.target.value;
+        const tooLong = AppState.s18Input.length > 50;
+        const invalid = AppState.s18Input.trim() === '' || tooLong;
+        const btn = document.getElementById('btnS18Submit');
+        const err = document.getElementById('s18ErrorText');
+        if (btn) btn.disabled = invalid;
+        if (err) err.classList.toggle('hidden', !tooLong);
+      });
+      const formS18 = document.getElementById('formS18App');
+      if (formS18) formS18.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!AppState.s18Input.trim() || AppState.s18Input.length > 50) return;
+        AppState.s18Tasks = [...AppState.s18Tasks, { id: Date.now(), judul: AppState.s18Input.trim(), selesai: false }];
+        AppState.s18Input = '';
+        renderCurrentSlide(false);
+      });
+      document.querySelectorAll('.chk-s18-item').forEach((chk) => {
+        chk.addEventListener('change', () => {
+          const id = parseInt(chk.getAttribute('data-s18-toggle'), 10);
+          AppState.s18Tasks = AppState.s18Tasks.map((t) => t.id === id ? { ...t, selesai: !t.selesai } : t);
+          renderCurrentSlide(false);
+        });
+      });
+      document.querySelectorAll('.btn-s18-del').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = parseInt(btn.getAttribute('data-s18-del'), 10);
+          AppState.s18Tasks = AppState.s18Tasks.filter((t) => t.id !== id);
+          renderCurrentSlide(false);
+        });
+      });
+      document.querySelectorAll('.btn-s18-scen').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const sc = btn.getAttribute('data-s18-scen');
+          if (sc === '1') AppState.s18Tasks = [...AppState.s18Tasks, { id: Date.now(), judul: 'Kerjakan Laporan Modul 2', selesai: false }];
+          if (sc === '2') AppState.s18Input = 'Judul tugas ini sengaja diketik sangat panjang melebihi batas maksimal 50 karakter';
+          if (sc === '3') AppState.s18Tasks = AppState.s18Tasks.map((t, i) => i === 0 ? { ...t, selesai: !t.selesai } : t);
+          if (sc === '4') AppState.s18Tasks = [];
+          if (sc === '5') {
+            AppState.s18Tasks = [
+              { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+              { id: 2, judul: 'Pelajari useState', selesai: false }
+            ];
+            AppState.s18Input = '';
+          }
+          renderCurrentSlide(false);
+        });
+      });
+
+      const btnS19Refresh = document.getElementById('btnS19SimRefresh');
+      if (btnS19Refresh) btnS19Refresh.addEventListener('click', () => {
+        showToast('Refresh F5: Data tetap aman tersimpan di localStorage!');
+        renderCurrentSlide(false);
+      });
+      const btnS19Add = document.getElementById('btnS19QuickAdd');
+      if (btnS19Add) btnS19Add.addEventListener('click', () => {
+        AppState.s18Tasks = [...AppState.s18Tasks, { id: Date.now(), judul: `Tugas Baru #${AppState.s18Tasks.length + 1}`, selesai: false }];
+        renderCurrentSlide(false);
+      });
+
+      // Slide 20 FAQ
+      document.querySelectorAll('.btn-s20-faq').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          AppState.s20SelectedFAQ = parseInt(btn.getAttribute('data-s20-faq'), 10);
+          renderCurrentSlide(false);
+        });
+      });
+
+      // Slide 21 Tugas 1 & 2
+      document.querySelectorAll('.btn-s21-filter').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          AppState.s21Filter = btn.getAttribute('data-s21-filter');
+          renderCurrentSlide(false);
+        });
+      });
+      document.querySelectorAll('.chk-s21-item').forEach((chk) => {
+        chk.addEventListener('change', () => {
+          const id = parseInt(chk.getAttribute('data-s21-toggle'), 10);
+          AppState.s21Tasks = AppState.s21Tasks.map((t) => t.id === id ? { ...t, selesai: !t.selesai } : t);
+          renderCurrentSlide(false);
+        });
+      });
+      const btnS21Clear = document.getElementById('btnS21ClearCompleted');
+      if (btnS21Clear) btnS21Clear.addEventListener('click', () => {
+        AppState.s21Tasks = AppState.s21Tasks.filter((t) => !t.selesai);
+        renderCurrentSlide(false);
+      });
+      const btnS21Reset = document.getElementById('btnS21Reset');
+      if (btnS21Reset) btnS21Reset.addEventListener('click', () => {
+        AppState.s21Tasks = [
+          { id: 1, judul: 'Install Node.js dan Vite', selesai: true },
+          { id: 2, judul: 'Pelajari useState', selesai: false },
+          { id: 3, judul: 'Buat Fitur Filter 3 Tombol', selesai: true }
+        ];
+        AppState.s21Filter = 'semua';
+        renderCurrentSlide(false);
+      });
+
+      // Slide 22 Tugas 3 Keuangan
+      const btnS22Bug = document.getElementById('btnS22ToggleNumberBug');
+      if (btnS22Bug) btnS22Bug.addEventListener('click', () => {
+        AppState.s22UseNumberConvert = !AppState.s22UseNumberConvert;
+        renderCurrentSlide(false);
+      });
+      const formS22 = document.getElementById('formS22Keuangan');
+      if (formS22) formS22.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const k = document.getElementById('inputS22Ket');
+        const n = document.getElementById('inputS22Nom');
+        const j = document.getElementById('selectS22Jenis');
+        if (!k || !n || !k.value.trim() || !n.value.trim()) return;
+        AppState.s22Transaksi = [...AppState.s22Transaksi, { id: Date.now(), ket: k.value.trim(), nominal: Number(n.value), jenis: j ? j.value : 'pemasukan' }];
+        renderCurrentSlide(false);
+      });
+      document.querySelectorAll('.btn-s22-del').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = parseInt(btn.getAttribute('data-s22-del'), 10);
+          AppState.s22Transaksi = AppState.s22Transaksi.filter((t) => t.id !== id);
+          renderCurrentSlide(false);
+        });
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.addEventListener('keydown', (e) => {
+        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+        if (tag === 'input' || tag === 'textarea' || tag === 'select' || (e.target && e.target.isContentEditable)) {
+          return;
+        }
+        if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+          e.preventDefault();
+          goToSlide(AppState.currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          goToSlide(AppState.currentSlide - 1);
+        }
+      });
+
+      renderCurrentSlide(true);
+    });
+  </script>
+</body>
+</html>
